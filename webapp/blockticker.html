@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Block Ticker WebSocket Example</title>
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/ticker.css">
+    <!-- endinject -->
+
+    <!-- inject:js -->
+    <script src="/js/blockticker.js"></script>
+    <!-- endinject -->
+</head>
+<body>
+<table>
+   <tr>
+      <th>Enter Symbol:</th>
+      <th>Add/Remove/BlockNumber</th>
+   </tr>
+   <tr>
+      <td>
+         <input id="symbol" type="text" size="10">
+      </td>
+      <td>
+         <input id="add" type="button" value="A" onclick="sendAdd(document.getElementById('symbol').value); return false;">
+         <input id="remove" class="red" type="button" value="X" onclick="sendRemove(document.getElementById('symbol').value); return false;">
+         <input id="block" type="button" value="B" onclick="sendBlockNumber(document.getElementById('symbol').value); return false;">
+      </td>
+   </tr>
+</table>
+<a href="#" onclick="testWebSocket(); return false;">Start</a>&nbsp;&nbsp;
+<a href="#" onclick="websocket.close(); return false;">Stop</a>
+<div id="output"></div>
+</body>
+</html>
