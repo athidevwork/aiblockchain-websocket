@@ -1,5 +1,7 @@
 package com.aiblockchain.model.hana;
 
+import com.aiblockchain.server.StringUtils;
+
 /**
  * HanaTransactionInputInfo.java
  *
@@ -27,7 +29,7 @@ public class HanaTransactionInputInfo {
           final int transactionInputIndex,
           final int indexIntoParentTransaction) {
     //Preconditions
-    //assert StringUtils.isNonEmptyString(parentTransactionId) : "parentTransactionId must be a non-empty string";
+    assert StringUtils.isNonEmptyString(parentTransactionId) : "parentTransactionId must be a non-empty string";
     assert transactionInputIndex >= 0 : "transactionInputIndex must not be negative";
     assert indexIntoParentTransaction >= 0 : "indexIntoParentTransaction must not be negative";
 
@@ -61,26 +63,29 @@ public class HanaTransactionInputInfo {
   }
 
   /** Sets the parent's transaction id.
+ * @param parentTransactionId 
    *
    * @return None
    */
-  public void setParentTransactionId() {
+  public void setParentTransactionId(String parentTransactionId) {
     this.parentTransactionId = parentTransactionId;
   }
 
   /** Sets the transaction input index.
+ * @param transactionInputIndex 
    *
    * @return None
    */
-  public void setTransactionInputIndex() {
+  public void setTransactionInputIndex(int transactionInputIndex) {
     this.transactionInputIndex = transactionInputIndex;
   }
 
   /** Sets this transaction input's index into its parent transction's outputs.
+ * @param indexIntoParentTransaction 
    *
    * @return None
    */
-  public void setIndexIntoParentTransaction() {
+  public void setIndexIntoParentTransaction(int indexIntoParentTransaction) {
     this.indexIntoParentTransaction = indexIntoParentTransaction;
   }
   

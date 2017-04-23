@@ -1,4 +1,4 @@
-package com.aiblockchain.server.websocket.stockticker;
+package com.aiblockchain.server.websocket.blockticker;
 
 /**
  * Created by jwb on 3/13/15.

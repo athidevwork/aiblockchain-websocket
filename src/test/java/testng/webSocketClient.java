@@ -1,4 +1,4 @@
-package com.aiblockchain.websocket;
+package testng;
 
 import org.apache.commons.codec.binary.Base64;
 import org.testng.annotations.Test;

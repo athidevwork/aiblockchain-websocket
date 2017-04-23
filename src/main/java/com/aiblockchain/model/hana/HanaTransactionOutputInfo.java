@@ -1,5 +1,7 @@
 package com.aiblockchain.model.hana;
 
+import com.aiblockchain.server.StringUtils;
+
 /**
  * HanaTransactionOutputInfo.java
  *
@@ -32,7 +34,7 @@ public class HanaTransactionOutputInfo {
           final String address,
           final double amount) {
     //Preconditions
-    //assert StringUtils.isNonEmptyString(parentTransactionId) : "parentTransactionId must be a non-empty string";	
+    assert StringUtils.isNonEmptyString(parentTransactionId) : "parentTransactionId must be a non-empty string";	
     assert transactionOutputIndex >= 0 : "transactionOutputIndex must not be negative";
 
 	this.parentTransactionId = parentTransactionId;
@@ -77,37 +79,41 @@ public class HanaTransactionOutputInfo {
   }
 
   /** Sets the parent's transaction id.
+ * @param parentTransactionId 
    *
    * @return None
    */
-  public void setParentTransactionId() {
+  public void setParentTransactionId(String parentTransactionId) {
     this.parentTransactionId = parentTransactionId;
   }
 
   /**
    * Sets the transaction output index;
+ * @param transactionOutputIndex 
    *
    * @return None
    */
-  public void setTransactionOutputIndex() {
+  public void setTransactionOutputIndex(int transactionOutputIndex) {
     this.transactionOutputIndex = transactionOutputIndex;
   }
 
   /**
    * Sets the transaction output address, or "to multisig", "to unknown type".
+ * @param address 
    *
    * @return None
    */
-  public void setAddress() {
+  public void setAddress(String address) {
     this.address = address;
   }
   
   /**
    * Sets the amount.
+ * @param amount 
    *
    * @return None
    */
-  public void setAmount() {
+  public void setAmount(double amount) {
     this.amount = amount;
   }
   

@@ -1,9 +1,10 @@
-package com.aiblockchain.server.websocket.stockticker;
+package com.aiblockchain.server.websocket;
 
 import io.netty.channel.ChannelHandlerContext;
 
 /**
- * Created by jwb on 3/13/15.
+ * WebSocketMessageHandler
+ * Created by Athi
  */
 public interface WebSocketMessageHandler {
    public String handleMessage(ChannelHandlerContext ctx, String frameText);

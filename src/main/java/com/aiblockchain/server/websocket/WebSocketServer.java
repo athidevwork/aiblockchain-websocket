@@ -13,6 +13,11 @@ import io.netty.handler.logging.LoggingHandler;
 
 import com.aiblockchain.server.websocket.WebSocketServerInitializer;
 
+/**
+ * WebSocketServer - web socket server.
+ * @author Athi
+ *
+ */
 public final class WebSocketServer {
 
     private static final int DEFAULT_PORT = 8083;
@@ -42,6 +47,9 @@ public final class WebSocketServer {
             ch.closeFuture().sync();
             logger.info("Web Socket Server started");
             System.out.println("Web Socket server started in port: " + port);
+        } catch (InterruptedException ex) {
+            // ignore
+        	System.out.println("Got an interruped exception" + ex);
         } finally {
         	logger.info("Web Socket Server shutdown started");
             bossGroup.shutdownGracefully();

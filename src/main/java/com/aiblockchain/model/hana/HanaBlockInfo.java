@@ -1,6 +1,9 @@
 package com.aiblockchain.model.hana;
 
+
 import java.util.List;
+
+import com.aiblockchain.server.StringUtils;
 
 /**
  * HanaBlockInfo.java
@@ -40,8 +43,8 @@ public class HanaBlockInfo
     // Preconditions
     assert blockNumber > 0 : "Block number has to be greater than 0";
     assert blockVersion > -1 : "version must not be negative";
-    //assert StringUtils.isNonEmptyString(blockMerkleRoot) : "blockMerkleRoot must be a non-empty string";
-    //assert StringUtils.isNonEmptyString(blockTime) : "blockTime must be a non-empty string";
+    assert StringUtils.isNonEmptyString(blockMerkleRoot) : "blockMerkleRoot must be a non-empty string";
+    assert StringUtils.isNonEmptyString(blockTime) : "blockTime must be a non-empty string";
     assert blockNoOftransactions > 0 : "number of transactions in a block have to more than 1";
 
     this.blockNumber = blockNumber;
@@ -126,10 +129,11 @@ public class HanaBlockInfo
   }
 
   /** Sets the number of transactions in a block.
+ * @param blockNoOftransactions 
    *
    * @return None
    */
-  public void setBlockNoOftransactions() {
+  public void setBlockNoOftransactions(int blockNoOftransactions) {
     this.blockNoOftransactions = blockNoOftransactions;
   }  
 

@@ -1,4 +1,4 @@
-package com.aiblockchain.server.websocket.stockticker;
+package com.aiblockchain.server.websocket;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.CACHE_CONTROL;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;

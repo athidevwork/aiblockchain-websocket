@@ -1,4 +1,4 @@
-package com.aiblockchain.server.websocket.stockticker;
+package com.aiblockchain.server.websocket.blockticker;
 
 import java.util.Map;
 

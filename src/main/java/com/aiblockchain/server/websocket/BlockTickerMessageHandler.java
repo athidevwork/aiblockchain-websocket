@@ -1,13 +1,17 @@
-package com.aiblockchain.server.websocket.stockticker;
+package com.aiblockchain.server.websocket;
 
-import com.aiblockchain.model.hana.HanaBlockInfo;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.google.gson.Gson;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
@@ -24,26 +28,27 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import com.aiblockchain.model.hana.HanaBlockInfo;
+import com.aiblockchain.model.hana.HanaInfo;
+import com.aiblockchain.model.hana.HanaTransactionInfo;
+import com.aiblockchain.server.websocket.blockticker.TickerRequest;
+import com.aiblockchain.server.websocket.blockticker.TickerResponse;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.gson.Gson;
+
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 /**
- * Created by jwb on 3/13/15.
+ * Created by Athi.
  */
-public class StockTickerMessageHandler implements WebSocketMessageHandler {
+public class BlockTickerMessageHandler implements WebSocketMessageHandler {
    private static final String STOCK_URL_START = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(";
    private static final String STOCK_URL_END = ")&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
    
@@ -58,7 +63,7 @@ public class StockTickerMessageHandler implements WebSocketMessageHandler {
 
    private static final AtomicBoolean keepRunning = new AtomicBoolean(true);
 
-   private static final Logger logger = LoggerFactory.getLogger(StockTickerMessageHandler.class);
+   private static final Logger logger = LoggerFactory.getLogger(BlockTickerMessageHandler.class);
 	  
    // Keep track of the current channel so we can talk directly to the client
    private AtomicReference<Channel> channel = new AtomicReference();
@@ -71,7 +76,7 @@ public class StockTickerMessageHandler implements WebSocketMessageHandler {
                .build()
    );
 
-   public StockTickerMessageHandler() {
+   public BlockTickerMessageHandler() {
       SendResultsCallable toClientCallable = new SendResultsCallable();
       FutureTask<String> toClientPc = new FutureTask<>(toClientCallable);
       executor.execute(toClientPc);
@@ -139,13 +144,22 @@ public class StockTickerMessageHandler implements WebSocketMessageHandler {
                hanaBlockInfo.setBlockVersion((short)1);
                hanaBlockInfo.setBlockMerkleRoot("HELLO FROM JB for Block " + blockNumber);
                hanaBlockInfo.setBlockTime("123456");
+               hanaBlockInfo.setBlockNoOftransactions(2);
 
-               String response = gson.toJson(hanaBlockInfo);
+               HanaInfo hanaInfo = new HanaInfo("HanaBlockInfo", hanaBlockInfo);
+               String response = gson.toJson(hanaInfo);
+               System.out.println("response = " + response);
+               //String response = gson.toJson(hanaBlockInfo);
 
                // send the client an update
                channel.get().writeAndFlush(new TextWebSocketFrame(response));
             }
 
+            /*HanaTransactionInfo transInfo = new HanaTransactionInfo(1, 1, "x2gdegabcdfe", (short)1, (short)2);
+            HanaInfo hanaInfo = new HanaInfo("HanaTransactionInfo", transInfo);
+            String response = gson.toJson(hanaInfo);
+            channel.get().writeAndFlush(new TextWebSocketFrame(response));*/
+            
             // only try to send back to client every 5 seconds so it isn't overwhelmed with messages
             Thread.sleep(5000L);
          }

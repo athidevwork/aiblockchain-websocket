@@ -2,6 +2,8 @@ package com.aiblockchain.model.hana;
 
 import java.util.List;
 
+import com.aiblockchain.server.StringUtils;
+
 /**
  * HanaTransactionInfo.java
  *
@@ -39,7 +41,7 @@ public class HanaTransactionInfo {
     //Preconditions
     assert blockNumber > 0 : "Block number has to be greater than 0";	
     assert transactionIndex >= 0 : "transactionIndex must not be negative";
-    //assert StringUtils.isNonEmptyString(transactionId) : "transactionId must be a non-empty string";
+    assert StringUtils.isNonEmptyString(transactionId) : "transactionId must be a non-empty string";
     assert transactionNoOfInputs > 0 : "transactionNoOfInputs must not be negative";
     assert transactionNoOfOutputs > 0 : "transactionNoOfOutputs must not be negative";
 
@@ -97,46 +99,51 @@ public class HanaTransactionInfo {
 
   /**
    * Sets the Block Number.
+ * @param blockNumber 
    *
    * @return None
    */
-  public void setBlockNumber() {
+  public void setBlockNumber(int blockNumber) {
     this.blockNumber = blockNumber;	
   }  
   
   /**
    * Sets the transaction index.
+ * @param transactionIndex 
    *
    * @return None
    */
-  public void setTransactionIndex() {
+  public void setTransactionIndex(int transactionIndex) {
     this.transactionIndex = transactionIndex;
   }
 
   /**
    * Sets the transaction id.
+ * @param transactionId 
    *
    * @return None
    */
-  public void setTransactionId() {
+  public void setTransactionId(String transactionId) {
     this.transactionId = transactionId;
   }
 
   /**
    * Sets the number of transaction inputs.
+ * @param transactionNoOfInputs 
    *
    * @return None
    */
-  public void setTransactionNoOfInputs() {
+  public void setTransactionNoOfInputs(short transactionNoOfInputs) {
     this.transactionNoOfInputs = transactionNoOfInputs;
   }
 
   /**
    * Sets the number of transaction outputs.
+ * @param transactionNoOfOutputs 
    *
    * @return None
    */
-  public void setTransactionNoOfOutputs() {
+  public void setTransactionNoOfOutputs(short transactionNoOfOutputs) {
     this.transactionNoOfOutputs = transactionNoOfOutputs;		
   }
   

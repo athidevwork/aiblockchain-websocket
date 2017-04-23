@@ -1,4 +1,4 @@
-package com.aiblockchain.server.websocket.stockticker;
+package com.aiblockchain.server.websocket;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -16,15 +16,20 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StockTickerServerHandler extends SimpleChannelInboundHandler<Object> {
-   private static final Logger logger = LoggerFactory.getLogger(StockTickerServerHandler.class);
+/**
+ * BlockTickerServerHandler - Server Handler called by Websocket Server.
+ * @author Athi
+ *
+ */
+public class BlockTickerServerHandler extends SimpleChannelInboundHandler<Object> {
+   private static final Logger logger = LoggerFactory.getLogger(BlockTickerServerHandler.class);
 
    protected WebSocketServerHandshaker handshaker;
    private   StringBuilder frameBuffer = null;
-   protected WebSocketMessageHandler wsMessageHandler = new StockTickerMessageHandler();
+   protected WebSocketMessageHandler wsMessageHandler = new BlockTickerMessageHandler();
    protected NettyHttpFileHandler httpFileHandler = new NettyHttpFileHandler();
    
-   public StockTickerServerHandler() {
+   public BlockTickerServerHandler() {
    }
 
    @Override

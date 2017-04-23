@@ -1,13 +1,13 @@
 /**
  * 
  */
-package com.aiblockchain.websocket;
+package com.aiblockchain.client;
 
 /**
  * @author Athi
  *
  */
-public class AIBlockChainListener {
+public class AIBlockChainListenerClient {
 
 	/**
 	 * @param args
