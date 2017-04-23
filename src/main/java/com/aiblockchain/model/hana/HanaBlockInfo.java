@@ -19,7 +19,9 @@ public class HanaBlockInfo
   private String blockMerkleRoot;
   // the blockTime as string
   private String blockTime;
-
+  // the number of transactions is a block
+  private int blockNoOftransactions;
+  
   /**
    * Creates a new instance of HanaBlockInfo.
    *
@@ -27,21 +29,26 @@ public class HanaBlockInfo
    * @param blockVersion the block version
    * @param blockMerkleRoot the transactions merkle root as string
    * @param blockTime the blockT time as string
+   * @param blockNoOftransactions the number of transactions in a block
    */
   public HanaBlockInfo(
           int blockNumber,
           short blockVersion,
           String blockMerkleRoot,
-          String blockTime) {
+          String blockTime,
+		  int blockNoOftransactions) {
     // Preconditions
+    assert blockNumber > 0 : "Block number has to be greater than 0";
     assert blockVersion > -1 : "version must not be negative";
     //assert StringUtils.isNonEmptyString(blockMerkleRoot) : "blockMerkleRoot must be a non-empty string";
     //assert StringUtils.isNonEmptyString(blockTime) : "blockTime must be a non-empty string";
+    assert blockNoOftransactions > 0 : "number of transactions in a block have to more than 1";
 
     this.blockNumber = blockNumber;
     this.blockVersion = blockVersion;
     this.blockMerkleRoot = blockMerkleRoot;
     this.blockTime = blockTime;
+    this.blockNoOftransactions = blockNoOftransactions;
   }
 
   public HanaBlockInfo() {}
@@ -78,7 +85,15 @@ public class HanaBlockInfo
     return blockTime;
   }
 
-   /** Sets the block number.
+  /** Gets the number of transactions in a block.
+   *
+   * @return the number of transactions in a block
+   */
+  public int getBlockNoOftransactions() {
+    return blockNoOftransactions;
+  }  
+
+  /** Sets the block number.
    *
    * @return None
    */
@@ -110,6 +125,14 @@ public class HanaBlockInfo
     this.blockTime = blockTime;
   }
 
+  /** Sets the number of transactions in a block.
+   *
+   * @return None
+   */
+  public void setBlockNoOftransactions() {
+    this.blockNoOftransactions = blockNoOftransactions;
+  }  
+
   /** Returns a string representation of this object.
    *
    * @return a string representation of this object
@@ -127,6 +150,8 @@ public class HanaBlockInfo
               .append(blockMerkleRoot)
               .append("\n  blockTime: ")
               .append(blockTime)
+              .append("\n  blockNoOftransactions: ")
+              .append(blockNoOftransactions)
               .append("]");
     return stringBuilder.toString();
   }

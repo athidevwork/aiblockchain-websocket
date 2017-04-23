@@ -11,41 +11,54 @@ import java.util.List;
  */
 public class HanaTransactionInfo {
 
+  // the block number
+  private int blockNumber;
   // the transaction index
-  private final int transactionIndex;
+  private int transactionIndex;
   // the transaction id
-  private final String transactionId;
-  // the transaction input infos
-  private final List<HanaTransactionInputInfo> hanaTransactionInputInfos;
-  // the transaction output infos
-  private final List<HanaTransactionOutputInfo> hanaTransactionOutputInfos;
+  private String transactionId;
+  // the transaction number of inputs
+  private short transactionNoOfInputs;
+  // the transaction number of outputs
+  private short transactionNoOfOutputs;
 
   /**
    * Creates a new instance of HanaTransactionInfo.
    *
    * @param transactionIndex the transaction index
    * @param transactionId the transaction id
-   * @param hanaTransactionInputInfos the transaction input infos
-   * @param hanaTransactionOutputInfos the transaction output infos
+   * @param transactionNoOfInputs the number of transactions in a block
+   * @param transactionNoOfOutputs the number of transactions in a block
    */
   public HanaTransactionInfo(
+          final int blockNumber,
           final int transactionIndex,
           final String transactionId,
-          final List<HanaTransactionInputInfo> hanaTransactionInputInfos,
-          final List<HanaTransactionOutputInfo> hanaTransactionOutputInfos) {
+		  final short transactionNoOfInputs,
+          final short transactionNoOfOutputs) {
     //Preconditions
+    assert blockNumber > 0 : "Block number has to be greater than 0";	
     assert transactionIndex >= 0 : "transactionIndex must not be negative";
     //assert StringUtils.isNonEmptyString(transactionId) : "transactionId must be a non-empty string";
-    assert hanaTransactionInputInfos != null : "hanaTransactionInputInfos must not be null";
-    assert hanaTransactionOutputInfos != null : "hanaTransactionOutputInfos must not be null";
-    assert !hanaTransactionOutputInfos.isEmpty() : "hanaTransactionOutputInfos must not be empty";
+    assert transactionNoOfInputs > 0 : "transactionNoOfInputs must not be negative";
+    assert transactionNoOfOutputs > 0 : "transactionNoOfOutputs must not be negative";
 
+	this.blockNumber = blockNumber;
     this.transactionIndex = transactionIndex;
     this.transactionId = transactionId;
-    this.hanaTransactionInputInfos = hanaTransactionInputInfos;
-    this.hanaTransactionOutputInfos = hanaTransactionOutputInfos;
+    this.transactionNoOfInputs = transactionNoOfInputs;
+    this.transactionNoOfOutputs = transactionNoOfOutputs;	
   }
 
+  /**
+   * Gets the Block Number.
+   *
+   * @return the block number
+   */
+  public int getBlockNumber() {
+    return blockNumber;
+  }
+  
   /**
    * Gets the transaction index.
    *
@@ -65,30 +78,12 @@ public class HanaTransactionInfo {
   }
 
   /**
-   * Gets the transaction input infos.
-   *
-   * @return the transaction input infos
-   */
-  public List<HanaTransactionInputInfo> getHanaTransactionInputInfos() {
-    return hanaTransactionInputInfos;
-  }
-
-  /**
-   * the transaction output infos
-   *
-   * @return the transaction output infos
-   */
-  public List<HanaTransactionOutputInfo> getHanaTransactionOutputInfos() {
-    return hanaTransactionOutputInfos;
-  }
-
-  /**
    * Gets the number of transaction inputs.
    *
    * @return the number of transaction inputs
    */
   public short getTransactionNoOfInputs() {
-    return (short) hanaTransactionInputInfos.size();
+    return transactionNoOfInputs;
   }
 
   /**
@@ -97,9 +92,54 @@ public class HanaTransactionInfo {
    * @return the number of transaction outputs
    */
   public short getTransactionNoOfOutputs() {
-    return (short) hanaTransactionOutputInfos.size();
+    return transactionNoOfOutputs;
   }
 
+  /**
+   * Sets the Block Number.
+   *
+   * @return None
+   */
+  public void setBlockNumber() {
+    this.blockNumber = blockNumber;	
+  }  
+  
+  /**
+   * Sets the transaction index.
+   *
+   * @return None
+   */
+  public void setTransactionIndex() {
+    this.transactionIndex = transactionIndex;
+  }
+
+  /**
+   * Sets the transaction id.
+   *
+   * @return None
+   */
+  public void setTransactionId() {
+    this.transactionId = transactionId;
+  }
+
+  /**
+   * Sets the number of transaction inputs.
+   *
+   * @return None
+   */
+  public void setTransactionNoOfInputs() {
+    this.transactionNoOfInputs = transactionNoOfInputs;
+  }
+
+  /**
+   * Sets the number of transaction outputs.
+   *
+   * @return None
+   */
+  public void setTransactionNoOfOutputs() {
+    this.transactionNoOfOutputs = transactionNoOfOutputs;		
+  }
+  
   /**
    * Returns a string representation of this object.
    *
@@ -110,10 +150,12 @@ public class HanaTransactionInfo {
     final StringBuilder stringBuilder = new StringBuilder();
     stringBuilder
             .append("[HanaTransactionInfo\n")
-            .append("  transactionIndex: ")
+            .append("  blockNumber: ")
+            .append(blockNumber)
+            .append("\n  transactionIndex: ")
             .append(transactionIndex)
             .append("\n  transactionId: ")
-            .append(transactionId)
+            .append(transactionId)			
             .append("\n  transactionNoOfInputs: ")
             .append(getTransactionNoOfInputs())
             .append("\n  transactionNoOfOutputs: ")
