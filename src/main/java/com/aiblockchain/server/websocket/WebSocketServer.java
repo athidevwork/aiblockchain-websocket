@@ -1,7 +1,6 @@
 package com.aiblockchain.server.websocket;
 
 
-import java.util.logging.Logger;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -10,11 +9,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.apache.log4j.Logger;
 
 public final class WebSocketServer {
 
-  private static final int DEFAULT_PORT = 8083;
-  private static Logger logger = Logger.getLogger("WebSocketServer");
+  public static final int DEFAULT_PORT = 20000;
+  private static Logger logger = Logger.getLogger(WebSocketServer.class);
 
   public WebSocketServer(final int port) {
     EventLoopGroup bossGroup = new NioEventLoopGroup(1);

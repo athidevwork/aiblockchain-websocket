@@ -1,6 +1,5 @@
 package com.aiblockchain.server.websocket;
 
-import java.util.logging.Logger;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -15,6 +14,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import org.apache.log4j.Logger;
 
 /**
  * BlockTickerServerHandler - Server Handler called by Websocket Server.
@@ -22,7 +22,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
  *
  */
 public class BlockTickerServerHandler extends SimpleChannelInboundHandler<Object> {
-   private static final Logger logger = Logger.getLogger("BlockTickerServerHandler");
+   private static final Logger logger = Logger.getLogger(BlockTickerServerHandler.class);
 
    protected WebSocketServerHandshaker handshaker;
    private   StringBuilder frameBuffer = null;
@@ -42,7 +42,7 @@ public class BlockTickerServerHandler extends SimpleChannelInboundHandler<Object
 	}
 
    protected void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
-      logger.fine("Received incoming frame [{}]" + frame.getClass().getName());
+      logger.debug("Received incoming frame [{}]" + frame.getClass().getName());
       // Check for closing frame
       if (frame instanceof CloseWebSocketFrame) {
          if (frameBuffer != null) {
@@ -69,7 +69,7 @@ public class BlockTickerServerHandler extends SimpleChannelInboundHandler<Object
          if (frameBuffer != null) {
             frameBuffer.append(((ContinuationWebSocketFrame)frame).text());
          } else {
-            logger.warning("Continuation frame received without initial frame.");
+            logger.warn("Continuation frame received without initial frame.");
          }
       } else {
          throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));

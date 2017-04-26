@@ -1,33 +1,5 @@
 package com.aiblockchain.server.websocket;
 
-import static io.netty.handler.codec.http.HttpHeaderNames.CACHE_CONTROL;
-import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
-import static io.netty.handler.codec.http.HttpHeaderNames.DATE;
-import static io.netty.handler.codec.http.HttpHeaderNames.EXPIRES;
-import static io.netty.handler.codec.http.HttpHeaderNames.IF_MODIFIED_SINCE;
-import static io.netty.handler.codec.http.HttpHeaderNames.LAST_MODIFIED;
-import static io.netty.handler.codec.http.HttpHeaderNames.LOCATION;
-import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-
-import javax.activation.MimetypesFileTypeMap;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -41,7 +13,16 @@ import io.netty.handler.codec.http.DefaultHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpChunkedInput;
+import static io.netty.handler.codec.http.HttpHeaderNames.CACHE_CONTROL;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderNames.DATE;
+import static io.netty.handler.codec.http.HttpHeaderNames.EXPIRES;
+import static io.netty.handler.codec.http.HttpHeaderNames.IF_MODIFIED_SINCE;
+import static io.netty.handler.codec.http.HttpHeaderNames.LAST_MODIFIED;
+import static io.netty.handler.codec.http.HttpHeaderNames.LOCATION;
 import io.netty.handler.codec.http.HttpHeaderUtil;
+import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
 import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
@@ -49,12 +30,28 @@ import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedFile;
 import io.netty.util.CharsetUtil;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.regex.Pattern;
+import javax.activation.MimetypesFileTypeMap;
+import org.apache.log4j.Logger;
 
 /**
  * Created by Athi.
  */
 public class NettyHttpFileHandler {
-   private static final Logger logger = Logger.getLogger("NettyHttpFileHandler");
+   private static final Logger logger = Logger.getLogger(NettyHttpFileHandler.class);
 
    public    static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
    public    static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
@@ -72,7 +69,7 @@ public class NettyHttpFileHandler {
             if (is != null) {
                mimeTypesMap = new MimetypesFileTypeMap(is);
             } else {
-               logger.severe("Cannot load mime types!");
+               logger.error("Cannot load mime types!");
             }
          }
       }
@@ -164,15 +161,15 @@ public class NettyHttpFileHandler {
          @Override
          public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
             if (total < 0) { // total unknown
-               logger.severe(future.channel() + " Transfer progress: " + progress);
+               logger.error(future.channel() + " Transfer progress: " + progress);
             } else {
-               logger.severe(future.channel() + " Transfer progress: " + progress + " / " + total);
+               logger.error(future.channel() + " Transfer progress: " + progress + " / " + total);
             }
          }
 
          @Override
          public void operationComplete(ChannelProgressiveFuture future) {
-            logger.severe(future.channel() + " Transfer complete.");
+            logger.error(future.channel() + " Transfer complete.");
          }
       });
 
@@ -309,7 +306,7 @@ public class NettyHttpFileHandler {
 
       // Convert to absolute path.
       String path = staticFileDir + uri;
-      logger.finest("current dir is " + Paths.get(".").toAbsolutePath().normalize().toString());
-      logger.finest("path to current file is '" + path + "'");
+      logger.debug("current dir is " + Paths.get(".").toAbsolutePath().normalize().toString());
+      logger.debug("path to current file is '" + path + "'");
       return path;
    }}

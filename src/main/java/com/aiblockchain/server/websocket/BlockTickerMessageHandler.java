@@ -1,5 +1,18 @@
 package com.aiblockchain.server.websocket;
 
+import com.aiblockchain.model.hana.HanaItems;
+import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
+import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
+import com.aiblockchain.model.hana.util.HanaUtil;
+import com.aiblockchain.server.websocket.blockticker.TickerRequest;
+import com.aiblockchain.server.websocket.blockticker.TickerResponse;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.gson.Gson;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -11,8 +24,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
-
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
@@ -29,24 +40,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-
-import com.aiblockchain.model.hana.HanaBlockInfo;
-import com.aiblockchain.model.hana.HanaInfo;
-import com.aiblockchain.model.hana.HanaItems;
-import com.aiblockchain.model.hana.HanaTransactionInfo;
-import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
-import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
-import com.aiblockchain.model.hana.util.HanaUtil;
-import com.aiblockchain.server.websocket.blockticker.TickerRequest;
-import com.aiblockchain.server.websocket.blockticker.TickerResponse;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.google.gson.Gson;
-
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import org.apache.log4j.Logger;
 
 /**
  * Created by Athi.
@@ -67,7 +61,7 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
    private static final AtomicBoolean keepRunning = new AtomicBoolean(true);
 
    //private static final Logger logger = LoggerFactory.getLogger(BlockTickerMessageHandler.class);
-   Logger logger = Logger.getLogger("BlockTickerMessageHandler");
+   Logger logger = Logger.getLogger(BlockTickerMessageHandler.class);
 	  
    // Keep track of the current channel so we can talk directly to the client
    private AtomicReference<Channel> channel = new AtomicReference();

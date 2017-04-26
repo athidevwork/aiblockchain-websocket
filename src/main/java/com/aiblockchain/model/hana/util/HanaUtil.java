@@ -3,24 +3,23 @@
  */
 package com.aiblockchain.model.hana.util;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.aiblockchain.model.hana.HanaBlockInfo;
 import com.aiblockchain.model.hana.HanaInfo;
+import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
+import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
 import com.aiblockchain.model.hana.HanaTransactionInfo;
 import com.aiblockchain.model.hana.HanaTransactionInputInfo;
 import com.aiblockchain.model.hana.HanaTransactionOutputInfo;
-import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
-import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
 import com.google.gson.Gson;
+import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  * @author Athi
  *
  */
 public class HanaUtil {
-	Logger l = Logger.getLogger("HanaUtil");
+	Logger l = Logger.getLogger(HanaUtil.class);
 	
 	public String wrapObjectInHanaInfo(String hanaObject, String objectType) {
 		HanaInfo hanaInfo = new HanaInfo(objectType, hanaObject);

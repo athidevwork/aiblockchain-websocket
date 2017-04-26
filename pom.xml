@@ -9,16 +9,34 @@
 	<properties>
 		<jdk.version>1.8</jdk.version>
 		<junit.version>4.11</junit.version>
-		<log4j.version>1.2.17</log4j.version>
 	</properties>
 		  
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
-		<dependency>
-		    <groupId>log4j</groupId>
-		    <artifactId>log4j</artifactId>
-		    <version>{log4j.version}</version>
-		</dependency>	
+                <dependency>
+                  <groupId>log4j</groupId>
+                  <artifactId>log4j</artifactId>
+                  <version>1.2.17</version>
+                  <!-- exclude unused Sun jars which otherwise have to be manually downloaded into the local Maven repository -->
+                  <exclusions>
+                    <exclusion>
+                      <groupId>javax.mail</groupId>
+                      <artifactId>mail</artifactId>
+                    </exclusion>
+                    <exclusion>
+                      <groupId>javax.jms</groupId>
+                      <artifactId>jms</artifactId>
+                    </exclusion>
+                    <exclusion>
+                      <groupId>com.sun.jdmk</groupId>
+                      <artifactId>jmxtools</artifactId>
+                    </exclusion>
+                    <exclusion>
+                      <groupId>com.sun.jmx</groupId>
+                      <artifactId>jmxri</artifactId>
+                    </exclusion>
+                  </exclusions>
+                </dependency>
+          
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
 		    <groupId>org.json</groupId>
@@ -150,13 +168,6 @@
 		    <version>1.9</version>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
-		<dependency>
-		    <groupId>log4j</groupId>
-		    <artifactId>log4j</artifactId>
-		    <version>1.2.17</version>
-		    <scope>test</scope>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google/bitcoinj -->
 		<dependency>
 		    <groupId>com.google</groupId>
