@@ -89,6 +89,7 @@ public class AIBlockChainListenerClient implements HanaListener {
     assert hanaBlockItem != null : "hanaBlockItem must not be null";
 
     LOGGER.info("newBlockNotification: " + hanaBlockItem);
+    System.out.println("redundant to check logger - newBlockNotification: " + hanaBlockItem);
 
     //TODO pass the new block item to the HANA client via the web socket connection 
   }
