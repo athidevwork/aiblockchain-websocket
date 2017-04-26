@@ -28,6 +28,15 @@ public final class WebSocketServer {
   // the AI blockchain listener client 
   private static AIBlockChainListenerClient aiBlockChainListenerClient;
 
+  /** Gets the the AI blockchain listener client singleton instance.
+   * 
+   * @return the the AI blockchain listener client
+   */
+  public static AIBlockChainListenerClient getAIBlockChainListenerClient() {
+    return aiBlockChainListenerClient;
+  }
+  
+  
   /** Initialize the AI blockchain listener client from the software agent system.
    * 
    * @param apiAdapter the API adapter supplied by the software agent system
@@ -36,8 +45,11 @@ public final class WebSocketServer {
     //Preconditions
     assert apiAdapter != null : "apiAdapter must not be null";
     
+    // construct the singleton instance of the listener client
     aiBlockChainListenerClient = AIBlockChainListenerClient.getInstance();
+    // insert the API adapter dependency
     aiBlockChainListenerClient.setApiAdapter(apiAdapter);
+    logger.info("the AI blockchain listener client is initialized");
   }
   
   
@@ -45,7 +57,12 @@ public final class WebSocketServer {
     //Preconditions
     assert aiBlockChainListenerClient != null : "the AIBlockChainListenerClient must be constructed before the WebSocketServer";
     
+    logger.info("initializing the web socket server ...");
     //TODO Athi - Please inject dependencies here into the AIBlockChainListenerClient so that new blocks get sent to the web socket client.
+    
+    // start listening for new blocks - note that the websocker server is not yet intialized, so this can be moved elsewhere as
+    //    AIBlockChainListenerClient.getInstance().addHanaListener();
+    aiBlockChainListenerClient.addHanaListener();
     
     EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     EventLoopGroup workerGroup = new NioEventLoopGroup();

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
  * @author reed
  *
  */
-public class AIBlockChainListenerClient implements HanaListener{
+public class AIBlockChainListenerClient implements HanaListener {
 
   // the logger
   private static final Logger LOGGER = Logger.getLogger(AIBlockChainListenerClient.class);
@@ -40,15 +40,10 @@ public class AIBlockChainListenerClient implements HanaListener{
   }
 
   /**
-   * Adds a HANA 2 demonstration listener.
-   *
-   * @param hanaListener the HANA 2 demonstration listener which will receive notification of new aicoin-qt blocks
+   * Adds this HANA 2 demonstration listener.
    */
-  public void addHanaListener(final HanaListener hanaListener) {
-    //Preconditions
-    assert hanaListener != null : "hanaListener must not be null";
-
-    apiAdapter.addHanaListener(hanaListener);
+  public void addHanaListener() {
+    apiAdapter.addHanaListener(this);
   }
 
   /**
@@ -70,30 +65,55 @@ public class AIBlockChainListenerClient implements HanaListener{
     return apiAdapter.getBlocksStartingWith(startingBlockNumber, nbrOfBlocks);
   }
 
-
-  /** Sets the API adapter.
-   * 
+  /**
+   * Sets the API adapter.
+   *
    * @param apiAdapter the API adapter
    */
   public void setApiAdapter(final AbstractAPIAdapter apiAdapter) {
     //Preconditions
     assert apiAdapter != null : "apiAdapter must not be null";
-    
+
     this.apiAdapter = apiAdapter;
   }
 
-  /** Receives notification of a new block which has been appended on to the blockchain.
+  /**
+   * Receives notification of a new block which has been appended on to the blockchain.
    *
-   * @param hanaBlockItem the HANA 3 demonstration block item, which is a container for block, transactions, inputs and outputs, as
-   * POJOs easy to serialize to JSON
+   * @param hanaBlockItem the HANA 3 demonstration block item, which is a container for block, transactions, inputs and outputs, as POJOs
+   * easy to serialize to JSON
    */
   @Override
   public void newBlockNotification(HanaItems.HanaBlockItem hanaBlockItem) {
     //Preconditions
     assert hanaBlockItem != null : "hanaBlockItem must not be null";
-    
+
     LOGGER.info("newBlockNotification: " + hanaBlockItem);
-    
+
     //TODO pass the new block item to the HANA client via the web socket connection 
+  }
+
+  /**
+   * Returns a string representation of this object for debugging.
+   *
+   * @return a string representation of this object
+   */
+  @Override
+  public String toString() {
+    final StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append("[AIBlockChainListenerClient, singleton instance present: ");
+    if (aiBlockChainListenerClient == null) {
+      stringBuilder.append("false");
+    } else {
+      stringBuilder.append("true");
+    }
+    stringBuilder.append(", API adapter present: ");
+    if (apiAdapter == null) {
+      stringBuilder.append("false");
+    } else {
+      stringBuilder.append("true");
+    }
+    stringBuilder.append("]");
+    return stringBuilder.toString();
   }
 }

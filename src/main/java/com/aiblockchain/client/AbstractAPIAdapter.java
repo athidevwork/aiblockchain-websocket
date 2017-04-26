@@ -32,9 +32,7 @@ public abstract class AbstractAPIAdapter {
     //Preconditions
     assert hanaListener != null : "hanaListener must not be null";
 
-    if (getLogger().isDebugEnabled()) {
-      getLogger().debug("adding HanaListener " + hanaListener);
-    }
+    getLogger().info("adding HanaListener " + hanaListener);
     hanaListeners.add(hanaListener);
   }
 
