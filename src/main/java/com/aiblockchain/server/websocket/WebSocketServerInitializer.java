@@ -1,5 +1,7 @@
 package com.aiblockchain.server.websocket;
 
+import java.util.logging.Logger;
+
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -13,10 +15,11 @@ import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketSe
  *
  */
 public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
-
+	private Logger logger = Logger.getLogger("WebSocketServerInitializer");
+	
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
-    	System.out.println("Initializing Channel : " + ch.toString());
+    	logger.info("Initializing Channel : " + ch.toString());
         ChannelPipeline pipeline = ch.pipeline();
 
         pipeline.addLast(new HttpServerCodec());

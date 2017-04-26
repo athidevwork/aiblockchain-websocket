@@ -1,7 +1,5 @@
 package com.aiblockchain.model.hana;
 
-import com.aiblockchain.server.StringUtils;
-
 /**
  * HanaTransactionOutputInfo.java
  *
@@ -11,46 +9,120 @@ import com.aiblockchain.server.StringUtils;
  */
 public class HanaTransactionOutputInfo {
 
-  // the parent's transaction id
-  private String parentTransactionId;
+  // the block number
+  private int blockNumber;
+  // the transaction index
+  private int transactionIndex;
+  // the transaction id
+  private String transactionId;
   // the transaction output index
   private int transactionOutputIndex;
   // the transaction output address, or "to multisig", "to unknown type"
   private String address;
-  // the amount
+  // the amount in aicoin
   private double amount;
 
   /**
+   * Creates a new empty instance of HanaTransactionOutputInfo.
+   */
+  public HanaTransactionOutputInfo() {
+  }
+  
+  /**
    * Creates a new instance of HanaTransactionOutputInfo.
-   *
-   * @param parentTransactionId the parent's transaction id
-   * @param transactionOutputIndex the transaction output index
+   * @param blockNumber the block number
+   * @param transactionIndex the transaction index
+   * @param transactionId the transaction id
+   * @param transactionOutputIndex
    * @param address the transaction output address, or "to multisig", "to unknown type"
-   * @param amount the amount
+   * @param amount the amount in aicoin
    */
   public HanaTransactionOutputInfo(
-          final String parentTransactionId,
+          final int blockNumber,
+          final int transactionIndex,
+          final String transactionId,
           final int transactionOutputIndex,
           final String address,
           final double amount) {
     //Preconditions
-    assert StringUtils.isNonEmptyString(parentTransactionId) : "parentTransactionId must be a non-empty string";	
+    assert blockNumber >= 0 : "block number must not be negative";
+    assert transactionId != null : "transactionId must not be null";
+    assert !transactionId.isEmpty() : "transactionId must not be an empty string";
     assert transactionOutputIndex >= 0 : "transactionOutputIndex must not be negative";
+    assert address != null : "address must not be null";
+    assert !address.isEmpty() : "address must not be empty";
 
-	this.parentTransactionId = parentTransactionId;
+    this.blockNumber = blockNumber;
+    this.transactionIndex = transactionIndex;
+    this.transactionId = transactionId;
     this.transactionOutputIndex = transactionOutputIndex;
     this.address = address;
     this.amount = amount;
   }
-
-  /** Gets the parent's transaction id.
-   *
-   * @return the parent's transaction id
-   */
-  public String getParentTransactionId() {
-    return parentTransactionId;
-  }
   
+  /** gets the block number.
+   *
+   * @return the block number
+   */
+  public int geBlockNumber() {
+    return blockNumber;
+  }
+
+  /**
+   * Sets the Block Number.
+   *
+   * @param blockNumber the block number
+   */
+  public void setBlockNumber(final int blockNumber) {
+    //Preconditions
+    assert blockNumber >= 0 : "block number must not be negative";
+    
+    this.blockNumber = blockNumber;
+  }
+
+  /**
+   * Gets the transaction index.
+   *
+   * @return the transaction index
+   */
+  public int getTransactionIndex() {
+    return transactionIndex;
+  }
+
+  /**
+   * Sets the transaction index.
+   *
+   * @param transactionIndex the transaction index
+   */
+  public void setTransactionIndex(final int transactionIndex) {
+    //Preconditions
+    assert transactionIndex >= 0 : "transactionIndex must not be negative";
+    
+    this.transactionIndex = transactionIndex;
+  }
+
+  /**
+   * Gets the transaction id.
+   *
+   * @return the transaction id
+   */
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  /**
+   * Sets the transaction id.
+   *
+   * @param transactionId the transaction id
+   */
+  public void setTransactionId(final String transactionId) {
+    //Preconditions
+    assert transactionId != null : "transactionId must not be null";
+    assert !transactionId.isEmpty() : "transactionId must not be an empty string";
+    
+    this.transactionId = transactionId;
+  }
+
   /**
    * Gets the transaction output index;
    *
@@ -58,6 +130,18 @@ public class HanaTransactionOutputInfo {
    */
   public int getTransactionOutputIndex() {
     return transactionOutputIndex;
+  }
+
+  /**
+   * Sets the transaction output index.
+   *
+   * @param transactionOutputIndex the transaction output index
+   */
+  public void setTransactionOutputIndex(final int transactionOutputIndex) {
+    //Preconditions
+    assert transactionOutputIndex >= 0 : "transactionOutputIndex must not be negative";
+    
+    this.transactionOutputIndex = transactionOutputIndex;
   }
 
   /**
@@ -70,6 +154,18 @@ public class HanaTransactionOutputInfo {
   }
   
   /**
+   * Sets the transaction output address, or "to multisig", "to unknown type".
+   *
+   * @param address the transaction output address, or "to multisig", "to unknown type"
+   */
+  public void setAddress(final String address) {
+    //Preconditions
+    assert address != null : "address must not be null";
+    assert !address.isEmpty() : "address must not be empty";
+    
+    this.address = address;
+  }
+  /**
    * Gets the amount.
    *
    * @return the amount
@@ -78,45 +174,15 @@ public class HanaTransactionOutputInfo {
     return amount;
   }
 
-  /** Sets the parent's transaction id.
- * @param parentTransactionId 
-   *
-   * @return None
-   */
-  public void setParentTransactionId(String parentTransactionId) {
-    this.parentTransactionId = parentTransactionId;
-  }
-
-  /**
-   * Sets the transaction output index;
- * @param transactionOutputIndex 
-   *
-   * @return None
-   */
-  public void setTransactionOutputIndex(int transactionOutputIndex) {
-    this.transactionOutputIndex = transactionOutputIndex;
-  }
-
-  /**
-   * Sets the transaction output address, or "to multisig", "to unknown type".
- * @param address 
-   *
-   * @return None
-   */
-  public void setAddress(String address) {
-    this.address = address;
-  }
-  
   /**
    * Sets the amount.
- * @param amount 
    *
-   * @return None
+   * @param amount the amount
    */
-  public void setAmount(double amount) {
+  public void setAmount(final double amount) {
     this.amount = amount;
   }
-  
+
   /**
    * Returns a string representation of this object.
    *
@@ -127,8 +193,12 @@ public class HanaTransactionOutputInfo {
     final StringBuilder stringBuilder = new StringBuilder();
     stringBuilder
             .append("[HanaTransactionOutputInfo\n")
-            .append("  parentTransactionId: ")
-            .append(parentTransactionId)
+            .append("  blockNumber: ")
+            .append(blockNumber)
+            .append("\n  transactionIndex: ")
+            .append(transactionIndex)
+            .append("\n  transactionId: ")
+            .append(transactionId)
             .append("\n  transactionOutputIndex: ")
             .append(transactionOutputIndex)
             .append("\n  address: ")

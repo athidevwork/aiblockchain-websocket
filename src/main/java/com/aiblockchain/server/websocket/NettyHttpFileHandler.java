@@ -23,12 +23,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.activation.MimetypesFileTypeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -53,10 +51,10 @@ import io.netty.handler.stream.ChunkedFile;
 import io.netty.util.CharsetUtil;
 
 /**
- * Created by jwb on 3/16/15.
+ * Created by Athi.
  */
 public class NettyHttpFileHandler {
-   private static final Logger logger = LoggerFactory.getLogger(NettyHttpFileHandler.class);
+   private static final Logger logger = Logger.getLogger("NettyHttpFileHandler");
 
    public    static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
    public    static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
@@ -74,7 +72,7 @@ public class NettyHttpFileHandler {
             if (is != null) {
                mimeTypesMap = new MimetypesFileTypeMap(is);
             } else {
-               logger.error("Cannot load mime types!");
+               logger.severe("Cannot load mime types!");
             }
          }
       }
@@ -166,15 +164,15 @@ public class NettyHttpFileHandler {
          @Override
          public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
             if (total < 0) { // total unknown
-               logger.error(future.channel() + " Transfer progress: " + progress);
+               logger.severe(future.channel() + " Transfer progress: " + progress);
             } else {
-               logger.error(future.channel() + " Transfer progress: " + progress + " / " + total);
+               logger.severe(future.channel() + " Transfer progress: " + progress + " / " + total);
             }
          }
 
          @Override
          public void operationComplete(ChannelProgressiveFuture future) {
-            logger.error(future.channel() + " Transfer complete.");
+            logger.severe(future.channel() + " Transfer complete.");
          }
       });
 
@@ -311,7 +309,7 @@ public class NettyHttpFileHandler {
 
       // Convert to absolute path.
       String path = staticFileDir + uri;
-      logger.trace("current dir is " + Paths.get(".").toAbsolutePath().normalize().toString());
-      logger.trace("path to current file is '" + path + "'");
+      logger.finest("current dir is " + Paths.get(".").toAbsolutePath().normalize().toString());
+      logger.finest("path to current file is '" + path + "'");
       return path;
    }}

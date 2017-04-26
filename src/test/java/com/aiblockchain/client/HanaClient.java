@@ -5,11 +5,14 @@ package com.aiblockchain.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.aiblockchain.model.hana.*;
 import com.aiblockchain.server.websocket.WebsocketClientEndpoint;
+import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.google.gson.Gson;
 
@@ -37,20 +40,44 @@ public class HanaClient {
                     
                    if (jsonObj.has("hanaObjectType")) {
 	                    String objectType = jsonObj.getString("hanaObjectType");
-	                    System.out.println("Object type = " + objectType);
-	                    JSONObject hanaInfo = jsonObj.getJSONObject("hanaObject");
-	                    System.out.println("Object type = " + hanaInfo);
+	                    //System.out.println("Object type = " + objectType);
+	                    //JSONObject hanaInfo = jsonObj.getJSONObject("hanaObject");
+	                    //System.out.println("Object type = " + hanaInfo);
+	                    String hanaInfo = jsonObj.getString("hanaObject");
+	                    //System.out.println("Object = " + hanaInfo);
 	                    
 	                    //switch based on type to map to appropriate data sent over the wire.
 	                    switch (objectType) {
 		                    case "HanaBlockInfo":
 								HanaBlockInfo hanaBlockInfo = gson.fromJson(hanaInfo.toString(), HanaBlockInfo.class);
-								System.out.println("block info = " + hanaBlockInfo);		                    	
+								System.out.println("Block = " + hanaBlockInfo);		                    	
 	                    		break;
 		                    case "HanaTransactionInfo":
-		                    	HanaTransactionInfo obj = gson.fromJson(hanaInfo.toString(), HanaTransactionInfo.class);
-								System.out.println("transaction info = " + obj);		                    	
+		                    	HanaTransactionInfo hanaTransInfo = gson.fromJson(hanaInfo.toString(), HanaTransactionInfo.class);
+								System.out.println("Transaction = " + hanaTransInfo);		                    	
 	            				break;
+		                    case "HanaTransactionInputInfo":
+		                    	JSONArray jsonArray = new JSONArray(hanaInfo);
+		                    	if (jsonArray.length() > 0) {
+		                    		for (int i = 0; i < jsonArray.length(); i++) {
+			                        	JSONObject jsonObject = jsonArray.getJSONObject(i);
+			                        	String jsonStr = jsonObject.toString();
+				                    	HanaTransactionInputInfo hanaTransInputInfo = gson.fromJson(jsonStr, HanaTransactionInputInfo.class);
+										System.out.println("Transaction Input = " + hanaTransInputInfo);		                    			
+		                    		}
+		                    	}
+	            				break;	 
+		                    case "HanaTransactionOutputInfo":
+		                    	JSONArray jsonofArray = new JSONArray(hanaInfo);
+		                    	if (jsonofArray.length() > 0) {
+		                    		for (int i = 0; i < jsonofArray.length(); i++) {
+			                        	JSONObject jsonObject = jsonofArray.getJSONObject(i);
+			                        	String jsonStr = jsonObject.toString();
+			                        	HanaTransactionOutputInfo hanaTransOutputInfo = gson.fromJson(jsonStr, HanaTransactionOutputInfo.class);
+										System.out.println("Transaction Output = " + hanaTransOutputInfo);		                    			
+		                    		}
+		                    	}	                    	
+	            				break;		            				
 	            			default:
 	            				break;
 	                    }	
@@ -58,11 +85,13 @@ public class HanaClient {
                     else {
                     	System.out.println(jsonObj);
                     }
+                   System.out.println("*******************************************");
                 }
             });
 
             // send message to websocket
             clientEndPoint.sendMessage("{\"command\":\"startblock\", \"blockNumber\":\"1\"}");
+            //clientEndPoint.sendMessage("{\"command\":\"getnewblock\", \"blockNumber\":\"2\"}");
 
             // wait for messages from websocket
             Thread.sleep(50000);
@@ -73,5 +102,4 @@ public class HanaClient {
             System.err.println("URISyntaxException exception: " + ex.getMessage());
         }
 	}
-
 }

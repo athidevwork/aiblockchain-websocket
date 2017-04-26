@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -28,12 +29,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aiblockchain.model.hana.HanaBlockInfo;
 import com.aiblockchain.model.hana.HanaInfo;
+import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaTransactionInfo;
+import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
+import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
+import com.aiblockchain.model.hana.util.HanaUtil;
 import com.aiblockchain.server.websocket.blockticker.TickerRequest;
 import com.aiblockchain.server.websocket.blockticker.TickerResponse;
 import com.eclipsesource.json.JsonArray;
@@ -63,7 +66,8 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
 
    private static final AtomicBoolean keepRunning = new AtomicBoolean(true);
 
-   private static final Logger logger = LoggerFactory.getLogger(BlockTickerMessageHandler.class);
+   //private static final Logger logger = LoggerFactory.getLogger(BlockTickerMessageHandler.class);
+   Logger logger = Logger.getLogger("BlockTickerMessageHandler");
 	  
    // Keep track of the current channel so we can talk directly to the client
    private AtomicReference<Channel> channel = new AtomicReference();
@@ -99,6 +103,10 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
          } else if ("startblock".equals(tickerRequest.getCommand())) {
 			blockNumber = tickerRequest.getBlockNumber();
             tickerResponse.setResult("success");
+         } else if ("getnewblock".equals(tickerRequest.getCommand())) {
+        	 logger.info("Getting blocks from ai block chain starting from number 1 to 10");
+			//HanaItems hanaItems = APIAdapter.getInstance().getBlocksStartingWith(1, 10);
+            tickerResponse.setResult("success");
          } else {
             tickerResponse.setResult("Failed. Command not recognized.");
          }
@@ -118,6 +126,8 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
    class SendResultsCallable implements Callable<String> {
       // one per callable as it is stateless, but not thread safe
       private Gson gson = new Gson();
+	HanaUtil util = new HanaUtil();
+	HanaBlockItem blockItem = HanaItems.makeTestHanaBlockItem();
 
       public SendResultsCallable() {
       }
@@ -139,6 +149,25 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
 			
 			if (blockNumber != 0){
 			   blockNumber++;
+			   
+				util.GetHanaBlockItem(blockItem);		
+				String blockInfo = util.getHanaBlockInfo(blockItem);
+				wrapandSendObject(blockInfo, "HanaBlockInfo");
+				
+				List<HanaTransactionItem> transactionList = util.getTransactionItem(blockItem);
+				for (HanaTransactionItem item : transactionList) {
+					String transInfo = util.getTransactionInfo(item);
+					wrapandSendObject(transInfo, "HanaTransactionInfo");
+	                
+					String transInputInfo = util.getTransactionInputInfo(item);	
+					wrapandSendObject(transInputInfo, "HanaTransactionInputInfo");
+					
+					String transOutputInfo = util.getTransactionOutputInfo(item);
+					wrapandSendObject(transOutputInfo, "HanaTransactionOutputInfo");
+				}
+				
+				logger.info ("**********************");
+			   /*
                HanaBlockInfo hanaBlockInfo = new HanaBlockInfo();
                hanaBlockInfo.setBlockNumber(blockNumber);
                hanaBlockInfo.setBlockVersion((short)1);
@@ -148,17 +177,25 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
 
                HanaInfo hanaInfo = new HanaInfo("HanaBlockInfo", hanaBlockInfo);
                String response = gson.toJson(hanaInfo);
-               System.out.println("response = " + response);
+               System.out.println("block response = " + response);
                //String response = gson.toJson(hanaBlockInfo);
 
                // send the client an update
                channel.get().writeAndFlush(new TextWebSocketFrame(response));
+               
+	            HanaTransactionInfo transInfo = new HanaTransactionInfo();
+	            transInfo.setBlockNumber(1);
+	            transInfo.setTransactionId("x2gdegabcdfe");
+	            transInfo.setTransactionIndex(0);
+	            transInfo.setTransactionNoOfInputs((short)1);
+	            transInfo.setTransactionNoOfOutputs((short)1);
+	            
+	            hanaInfo = new HanaInfo("HanaTransactionInfo", transInfo);
+	            response = gson.toJson(hanaInfo);
+	            System.out.println("trans response = " + response);
+	            channel.get().writeAndFlush(new TextWebSocketFrame(response)); 
+	            */              
             }
-
-            /*HanaTransactionInfo transInfo = new HanaTransactionInfo(1, 1, "x2gdegabcdfe", (short)1, (short)2);
-            HanaInfo hanaInfo = new HanaInfo("HanaTransactionInfo", transInfo);
-            String response = gson.toJson(hanaInfo);
-            channel.get().writeAndFlush(new TextWebSocketFrame(response));*/
             
             // only try to send back to client every 5 seconds so it isn't overwhelmed with messages
             Thread.sleep(5000L);
@@ -166,6 +203,11 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
 
          return "done";
       }
+
+	private void wrapandSendObject(String hanaObject, String objectType) {
+		String jsonStr = util.wrapObjectInHanaInfo(hanaObject, objectType);
+		channel.get().writeAndFlush(new TextWebSocketFrame(jsonStr));
+	}
    }
 
    private Map<String, String> getPricesForSymbols(List<String> symbols) {

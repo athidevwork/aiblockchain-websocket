@@ -1,10 +1,5 @@
 package com.aiblockchain.model.hana;
 
-
-import java.util.List;
-
-import com.aiblockchain.server.StringUtils;
-
 /**
  * HanaBlockInfo.java
  *
@@ -26,6 +21,12 @@ public class HanaBlockInfo
   private int blockNoOftransactions;
   
   /**
+   * Creates a new empty instance of HanaBlockInfo.
+   */
+  public HanaBlockInfo() {
+  }
+
+  /**
    * Creates a new instance of HanaBlockInfo.
    *
    * @param blockNumber the block number
@@ -35,16 +36,18 @@ public class HanaBlockInfo
    * @param blockNoOftransactions the number of transactions in a block
    */
   public HanaBlockInfo(
-          int blockNumber,
-          short blockVersion,
-          String blockMerkleRoot,
-          String blockTime,
-		  int blockNoOftransactions) {
+          final int blockNumber,
+          final short blockVersion,
+          final String blockMerkleRoot,
+          final String blockTime,
+	  final int blockNoOftransactions) {
     // Preconditions
     assert blockNumber > 0 : "Block number has to be greater than 0";
     assert blockVersion > -1 : "version must not be negative";
-    assert StringUtils.isNonEmptyString(blockMerkleRoot) : "blockMerkleRoot must be a non-empty string";
-    assert StringUtils.isNonEmptyString(blockTime) : "blockTime must be a non-empty string";
+    assert blockMerkleRoot != null : "blockMerkleRoot must not be null";
+    assert !blockMerkleRoot.isEmpty() : "blockMerkleRoot must not be empty";
+    assert blockTime != null : "blockTime must not be null";
+    assert !blockTime.isEmpty() : "blockTime must not be empty";
     assert blockNoOftransactions > 0 : "number of transactions in a block have to more than 1";
 
     this.blockNumber = blockNumber;
@@ -54,14 +57,24 @@ public class HanaBlockInfo
     this.blockNoOftransactions = blockNoOftransactions;
   }
 
-  public HanaBlockInfo() {}
-
   /** gets the block number.
    *
    * @return the block number
    */
   public int geBlockNumber() {
     return blockNumber;
+  }
+
+  /**
+   * Sets the Block Number.
+   *
+   * @param blockNumber the block number
+   */
+  public void setBlockNumber(final int blockNumber) {
+    //Preconditions
+    assert blockNumber >= 0 : "block number must not be negative";
+    
+    this.blockNumber = blockNumber;
   }
 
   /** gets the block version.
@@ -72,6 +85,16 @@ public class HanaBlockInfo
     return blockVersion;
   }
 
+  /** Sets the block version.
+   *
+   * @param blockVersion the block version
+   */
+  public void setBlockVersion(final short blockVersion) {
+    // Preconditions
+    assert blockVersion > -1 : "version must not be negative";
+    
+    this.blockVersion = blockVersion;
+  }
   /** Gets the transactions merkle root as string.
    *
    * @return the transactions merkle root as string
@@ -80,6 +103,17 @@ public class HanaBlockInfo
     return blockMerkleRoot;
   }
 
+  /** Sets the transactions merkle root as string.
+   *
+   */
+  public void setBlockMerkleRoot(final String blockMerkleRoot) {
+    // Preconditions
+    assert blockMerkleRoot != null : "blockMerkleRoot must not be null";
+    assert !blockMerkleRoot.isEmpty() : "blockMerkleRoot must not be empty";
+    
+    this.blockMerkleRoot = blockMerkleRoot;
+  }
+  
   /** Gets the block time as string.
    *
    * @return the block time as string
@@ -88,6 +122,18 @@ public class HanaBlockInfo
     return blockTime;
   }
 
+  /** Sets the block time as string.
+   *
+   * @param blockTime the block time as string
+   */
+  public void setBlockTime(final String blockTime) {
+    // Preconditions
+    assert blockTime != null : "blockTime must not be null";
+    assert !blockTime.isEmpty() : "blockTime must not be empty";
+    
+    this.blockTime = blockTime;
+  }
+  
   /** Gets the number of transactions in a block.
    *
    * @return the number of transactions in a block
@@ -96,44 +142,13 @@ public class HanaBlockInfo
     return blockNoOftransactions;
   }  
 
-  /** Sets the block number.
-   *
-   * @return None
-   */
-  public void setBlockNumber(int blockNumber) {
-    this.blockNumber = blockNumber;
-  }
-
-  /** Sets the block version.
-   *
-   * @return None
-   */
-  public void setBlockVersion(short blockVersion) {
-    this.blockVersion = blockVersion;
-  }
-
-  /** Sets the transactions merkle root as string.
-   *
-   * @return None
-   */
-  public void setBlockMerkleRoot(String blockMerkleRoot) {
-    this.blockMerkleRoot = blockMerkleRoot;
-  }
-
-  /** Sets the block time as string.
-   *
-   * @return None
-   */
-  public void setBlockTime(String blockTime) {
-    this.blockTime = blockTime;
-  }
-
   /** Sets the number of transactions in a block.
- * @param blockNoOftransactions 
    *
-   * @return None
    */
-  public void setBlockNoOftransactions(int blockNoOftransactions) {
+  public void setBlockNoOftransactions(final int blockNoOftransactions) {
+    // Preconditions
+    assert blockNoOftransactions > 0 : "number of transactions in a block must be positive";
+
     this.blockNoOftransactions = blockNoOftransactions;
   }  
 
