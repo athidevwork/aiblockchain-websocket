@@ -15,6 +15,9 @@ import org.junit.Test;
 
 /**
  *
+ *    !!!!!!!!!!!!!!!!  no tests executed - figure out later -Steve
+ * 
+ * 
  * @author reed
  */
 public class AIBlockChainListenerClientTest {
