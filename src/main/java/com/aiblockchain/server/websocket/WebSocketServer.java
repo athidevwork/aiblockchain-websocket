@@ -2,6 +2,8 @@ package com.aiblockchain.server.websocket;
 
 
 
+import com.aiblockchain.client.AIBlockChainListenerClient;
+import com.aiblockchain.client.AbstractAPIAdapter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -11,12 +13,40 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.apache.log4j.Logger;
 
+/** The AI blockchain system first calls intializeAIBlockChainListenerClient to create the singleton listener object and to
+ * inject a dependency for its API adapter. 
+ * 
+ * Then the system constructs the WebSocketServer instance with the API port number. This constructor does not return until 
+ * the application is terminated, so the system uses a separate dedicated thread for that purpose.
+ * 
+ * @author Athi, reed
+ */
 public final class WebSocketServer {
 
   public static final int DEFAULT_PORT = 20000;
   private static Logger logger = Logger.getLogger(WebSocketServer.class);
+  // the AI blockchain listener client 
+  private static AIBlockChainListenerClient aiBlockChainListenerClient;
 
+  /** Initialize the AI blockchain listener client from the software agent system.
+   * 
+   * @param apiAdapter the API adapter supplied by the software agent system
+   */
+  public static void intializeAIBlockChainListenerClient(final AbstractAPIAdapter apiAdapter) {
+    //Preconditions
+    assert apiAdapter != null : "apiAdapter must not be null";
+    
+    aiBlockChainListenerClient = AIBlockChainListenerClient.getInstance();
+    aiBlockChainListenerClient.setApiAdapter(apiAdapter);
+  }
+  
+  
   public WebSocketServer(final int port) {
+    //Preconditions
+    assert aiBlockChainListenerClient != null : "the AIBlockChainListenerClient must be constructed before the WebSocketServer";
+    
+    //TODO Athi - Please inject dependencies here into the AIBlockChainListenerClient so that new blocks get sent to the web socket client.
+    
     EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     EventLoopGroup workerGroup = new NioEventLoopGroup();
     try {
