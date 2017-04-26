@@ -27,9 +27,9 @@ public final class WebSocketServer {
               .childHandler(new WebSocketServerInitializer());
 
       Channel ch = b.bind(port).sync().channel();
-      ch.closeFuture().sync();
       logger.info("Web Socket Server started");
       System.out.println("Web Socket server started in port: " + port);
+      ch.closeFuture().sync();
     } catch (InterruptedException ex) {
       // ignore
       System.out.println("Got an interruped exception" + ex);
