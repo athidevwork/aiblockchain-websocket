@@ -4,10 +4,10 @@
 package com.aiblockchain.server.websocket;
 
 
-import java.util.logging.Logger;
 
 import com.aiblockchain.client.AbstractAPIAdapter;
 import com.aiblockchain.model.hana.HanaItems;
+import org.apache.log4j.Logger;
 
 /**
  * @author User

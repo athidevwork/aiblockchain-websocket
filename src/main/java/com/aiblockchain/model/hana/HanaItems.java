@@ -23,35 +23,49 @@ import java.util.List;
  */
 public class HanaItems {
 
-  // the HANA 2 demonstration block items
-  private List<HanaBlockItem> hanaBlockItems;
-  
+  // the HANA 2 demonstration block items, default to empty until set by builder
+  private List<HanaBlockItem> hanaBlockItems = new ArrayList<>();
+
   /**
    * Constructs a new HanaItems instance.
    */
   public HanaItems() {
   }
 
-
-  /** Gets the HANA 2 demonstration block items.
-   * 
+  /**
+   * Gets the HANA 2 demonstration block items.
+   *
    * @return the HANA 2 demonstration block items
    */
   public List<HanaBlockItem> getHanaBlockItems() {
     return hanaBlockItems;
   }
 
-  /** Sets the HANA 2 demonstration block items.
-   * 
+  /**
+   * Sets the HANA 2 demonstration block items.
+   *
    * @param hanaBlockItems the HANA 2 demonstration block items
    */
   public void setHanaBlockItems(List<HanaBlockItem> hanaBlockItems) {
     //Preconditions
     assert hanaBlockItems != null : "hanaBlockItems must not be null";
-    
+
     this.hanaBlockItems = hanaBlockItems;
   }
-  
+
+  /**
+   * Returns a string representation of this object.
+   *
+   * @return a string representation of this object
+   */
+  public String toString() {
+    return (new StringBuilder())
+            .append("[HanaItems, ")
+            .append(hanaBlockItems.size())
+            .append(" hanaBlockItems]")
+            .toString();
+  }
+
   /**
    * Contains a HANA 2 demonstration block information POJO, and a list of its transaction information items.
    */

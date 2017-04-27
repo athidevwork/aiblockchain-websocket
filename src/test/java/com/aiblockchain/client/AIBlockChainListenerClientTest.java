@@ -5,18 +5,21 @@
  */
 package com.aiblockchain.client;
 
+import com.aiblockchain.model.hana.HanaItems;
+import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
- *    !!!!!!!!!!!!!!!!  no tests executed - figure out later -Steve
- * 
- * 
  * @author reed
  */
 public class AIBlockChainListenerClientTest {
@@ -28,7 +31,14 @@ public class AIBlockChainListenerClientTest {
 
   @BeforeClass
   public static void setUpClass() {
-    LOGGER.warn("setUpClass");
+    LOGGER.info("getInstance");
+    AIBlockChainListenerClient aiBlockChainListenerClient = AIBlockChainListenerClient.getInstance();
+    assertNotNull(aiBlockChainListenerClient);
+    assertTrue(aiBlockChainListenerClient == AIBlockChainListenerClient.getInstance());
+    LOGGER.info("toString");
+    assertEquals(
+            "[AIBlockChainListenerClient, singleton instance present: true, API adapter present: false]",
+            aiBlockChainListenerClient.toString());
   }
 
   @AfterClass
@@ -44,70 +54,69 @@ public class AIBlockChainListenerClientTest {
   }
 
   /**
-   * Test of getInstance method, of class AIBlockChainListenerClient.
+   * Test of AIBlockChainListenerClient methods.
    */
   @Test
-  public void testGetInstance() {
-    LOGGER.info("getInstance");
-//    AIBlockChainListenerClient expResult = null;
-//    AIBlockChainListenerClient result = AIBlockChainListenerClient.getInstance();
-//    assertNotEquals(result, expResult);
-  }
+  public void testVariousMethods() {
+    LOGGER.info("setApiAdapter");
+    AIBlockChainListenerClient instance = AIBlockChainListenerClient.getInstance();
+    final AbstractAPIAdapter mockAPIAdapter = new MockAPIAdapter();
+    instance.setApiAdapter(mockAPIAdapter);
 
-  /**
-   * Test of addHanaListener method, of class AIBlockChainListenerClient.
-   */
-  @Test
-  public void testAddHanaListener() {
+    LOGGER.info("toString");
+    assertEquals(
+            "[AIBlockChainListenerClient, singleton instance present: true, API adapter present: true]",
+            instance.toString());
+
     LOGGER.info("addHanaListener");
-//    AIBlockChainListenerClient instance = null;
-//    instance.addHanaListener();
-  }
+    instance.addHanaListener();
 
-  /**
-   * Test of getBlocksStartingWith method, of class AIBlockChainListenerClient.
-   */
-  @Test
-  public void testGetBlocksStartingWith() {
     LOGGER.info("getBlocksStartingWith");
     long startingBlockNumber = 0L;
-    int nbrOfBlocks = 0;
-//    AIBlockChainListenerClient instance = null;
-//    HanaItems expResult = null;
-//    HanaItems result = instance.getBlocksStartingWith(startingBlockNumber, nbrOfBlocks);
-//    LOGGER.info(result.toString());
+    int nbrOfBlocks = 10;
+    HanaItems hanaItems = instance.getBlocksStartingWith(startingBlockNumber, nbrOfBlocks);
+    assertNotNull(hanaItems);
+    assertEquals("[HanaItems, 1 hanaBlockItems]", hanaItems.toString());
   }
 
   /**
-   * Test of setApiAdapter method, of class AIBlockChainListenerClient.
+   * Provides a mock HANA 2 demonstration API adapter for unit tests.
    */
-  @Test
-  public void testSetApiAdapter() {
-    LOGGER.info("setApiAdapter");
-//    AbstractAPIAdapter apiAdapter = null;
-//    AIBlockChainListenerClient instance = null;
-//    instance.setApiAdapter(apiAdapter);
-  }
+  static final class MockAPIAdapter extends AbstractAPIAdapter {
 
-  /**
-   * Test of newBlockNotification method, of class AIBlockChainListenerClient.
-   */
-  @Test
-  public void testNewBlockNotification() {
-    LOGGER.info("newBlockNotification");
-//    HanaItems.HanaBlockItem hanaBlockItem = null;
-//    AIBlockChainListenerClient instance = null;
-//    instance.newBlockNotification(hanaBlockItem);
-  }
+    // the logger
+    private static final Logger LOGGER = Logger.getLogger(MockAPIAdapter.class);
 
-  /**
-   * Test of toString method, of class AIBlockChainListenerClient.
-   */
-  @Test
-  public void testToString() {
-    LOGGER.info("toString");
-//    AIBlockChainListenerClient instance = null;
-//    String expResult = "";
+    /**
+     * Returns a list of blocks starting with the given block number.
+     *
+     * @param startingBlockNumber the given block number of the first block returned
+     * @param nbrOfBlocks the number of blocks to return, avoiding very large data structures possible with unlimited request
+     *
+     * @return the block items for blocks starting with the given block number limited by the number of blocks to return, or because the
+     * blockchain has been exhausted by this request
+     */
+    @Override
+    public HanaItems getBlocksStartingWith(long startingBlockNumber, int nbrOfBlocks) {
+      final HanaItems hanaItems = new HanaItems();
+      final List<HanaBlockItem> hanaBlockItems = new ArrayList<>();
+      assertEquals("[HanaItems, 0 hanaBlockItems]", hanaItems.toString());
+      hanaBlockItems.add(HanaItems.makeTestHanaBlockItem());
+      hanaItems.setHanaBlockItems(hanaBlockItems);
+      assertEquals("[HanaItems, 1 hanaBlockItems]", hanaItems.toString());
+      return hanaItems;
+    }
+
+    /**
+     * Gets the logger.
+     *
+     * @return the logger
+     */
+    @Override
+    protected Logger getLogger() {
+      return LOGGER;
+    }
+
   }
 
 }

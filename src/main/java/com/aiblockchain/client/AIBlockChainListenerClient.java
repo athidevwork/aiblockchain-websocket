@@ -24,7 +24,7 @@ public class AIBlockChainListenerClient implements HanaListener {
   /**
    * Constructs a new AIBlockChainListenerClient instance.
    */
-  private AIBlockChainListenerClient() {
+  protected AIBlockChainListenerClient() {
     aiBlockChainListenerClient = this;
   }
 
@@ -81,7 +81,7 @@ public class AIBlockChainListenerClient implements HanaListener {
   /**
    * Receives notification of a new block which has been appended on to the blockchain.
    *
-   * @param hanaBlockItem the HANA 3 demonstration block item, which is a container for block, transactions, inputs and outputs, as POJOs
+   * @param hanaBlockItem the HANA 2 demonstration block item, which is a container for block, transactions, inputs and outputs, as POJOs
    * easy to serialize to JSON
    */
   @Override
@@ -90,7 +90,6 @@ public class AIBlockChainListenerClient implements HanaListener {
     assert hanaBlockItem != null : "hanaBlockItem must not be null";
 
     LOGGER.info("newBlockNotification: " + hanaBlockItem);
-    System.out.println("redundant to check logger - newBlockNotification: " + hanaBlockItem);
 
     //TODO pass the new block item to the HANA client via the web socket connection 
   }
