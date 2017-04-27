@@ -3,17 +3,17 @@
  */
 package com.aiblockchain.listener;
 
-import java.util.logging.Logger;
 
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import com.google.gson.Gson;
+import org.apache.log4j.Logger;
 
 /**
  * @author Athi
  *
  */
 public class AIBlockChainListener implements HanaListener {
-	Logger logger = Logger.getLogger("AIBlockChainListener");
+	Logger logger = Logger.getLogger(AIBlockChainListener.class);
 	
 	@Override
 	public void newBlockNotification(HanaBlockItem hanaBlockItem) {

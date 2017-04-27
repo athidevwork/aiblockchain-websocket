@@ -5,24 +5,22 @@ package com.aiblockchain.server.websocket;
 
 
 
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
-
 import com.aiblockchain.client.AIBlockChainListenerClient;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.server.websocket.blockticker.BlockRequest;
 import com.aiblockchain.server.websocket.blockticker.BlockResponse;
 import com.google.gson.Gson;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import java.util.concurrent.atomic.AtomicReference;
+import org.apache.log4j.Logger;
 
 /**
  * @author Athi
  *
  */
 public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
-	Logger logger = Logger.getLogger("AIBlockChainMessageHandler");
+   Logger logger = Logger.getLogger(AIBlockChainMessageHandler.class);
 	
    // stateless JSON serializer/deserializer
    private Gson gson = new Gson();
