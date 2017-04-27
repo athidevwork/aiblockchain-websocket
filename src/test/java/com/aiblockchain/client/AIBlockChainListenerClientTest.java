@@ -6,6 +6,9 @@
 package com.aiblockchain.client;
 
 import com.aiblockchain.model.hana.HanaItems;
+
+import static org.testng.Assert.assertNotEquals;
+
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -52,6 +55,7 @@ public class AIBlockChainListenerClientTest {
     LOGGER.info("getInstance");
     AIBlockChainListenerClient expResult = null;
     AIBlockChainListenerClient result = AIBlockChainListenerClient.getInstance();
+    assertNotEquals(result, expResult);
   }
 
   /**
@@ -75,6 +79,7 @@ public class AIBlockChainListenerClientTest {
     AIBlockChainListenerClient instance = null;
     HanaItems expResult = null;
     HanaItems result = instance.getBlocksStartingWith(startingBlockNumber, nbrOfBlocks);
+    LOGGER.info(result.toString());
   }
 
   /**

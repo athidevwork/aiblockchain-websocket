@@ -1,0 +1,11 @@
+name: Suite
+configFailurePolicy: skip
+tests:
+  - name: Test
+    classes:
+      - testng.webSocketClient
+
+  - name: ListenerClient
+    classes:
+      - com.aiblockchain.client.AIBlockChainListenerClientTest
+

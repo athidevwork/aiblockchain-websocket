@@ -1,9 +1,10 @@
 package com.aiblockchain.client;
 
+import com.aiblockchain.listener.HanaListener;
 import com.aiblockchain.model.hana.HanaItems;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.log4j.Logger;
+import java.util.logging.Logger;
 
 /**
  * APIAdapter.java

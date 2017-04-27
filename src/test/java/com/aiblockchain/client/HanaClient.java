@@ -5,15 +5,15 @@ package com.aiblockchain.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.aiblockchain.model.hana.*;
+import com.aiblockchain.model.hana.HanaBlockInfo;
+import com.aiblockchain.model.hana.HanaTransactionInfo;
+import com.aiblockchain.model.hana.HanaTransactionInputInfo;
+import com.aiblockchain.model.hana.HanaTransactionOutputInfo;
 import com.aiblockchain.server.websocket.WebsocketClientEndpoint;
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
 import com.google.gson.Gson;
 
 /**
@@ -31,7 +31,8 @@ public class HanaClient {
             Gson gson = new Gson();		
 		   
             // open websocket
-			final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:8083/wsticker"));
+			//final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:8083/wsticker"));
+			final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:20000/wsticker"));
             // add listener
             clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
                 public void handleMessage(String message) {
@@ -90,8 +91,8 @@ public class HanaClient {
             });
 
             // send message to websocket
-            clientEndPoint.sendMessage("{\"command\":\"startblock\", \"blockNumber\":\"1\"}");
-            //clientEndPoint.sendMessage("{\"command\":\"getnewblock\", \"blockNumber\":\"2\"}");
+            //clientEndPoint.sendMessage("{\"command\":\"startblock\", \"blockNumber\":\"1\"}");
+            clientEndPoint.sendMessage("{\"command\":\"getnewblock\", \"blockNumber\":\"1\", \"numberOfBlocks\":\"2\"}");
 
             // wait for messages from websocket
             Thread.sleep(50000);

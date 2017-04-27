@@ -3,6 +3,7 @@
  */
 package com.aiblockchain.client;
 
+import com.aiblockchain.listener.HanaListener;
 import com.aiblockchain.model.hana.HanaItems;
 import org.apache.log4j.Logger;
 

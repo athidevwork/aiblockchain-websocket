@@ -2,7 +2,12 @@
 <suite name="Suite" parallel="false">
   <test name="Test">
     <classes>
-      <class name="com.aiblockchain.websocket.webSocketClient"/>
+      <class name="testng.webSocketClient"/>
     </classes>
   </test> <!-- Test -->
+  <test name="ListenerClient">
+    <classes>
+      <class name="com.aiblockchain.client.AIBlockChainListenerClientTest"/>
+    </classes>  
+  </test>
 </suite> <!-- Suite -->
