@@ -1,7 +1,8 @@
 package testng;
 
 import org.apache.commons.codec.binary.Base64;
-import org.testng.annotations.Test;
+import org.junit.Test;
+//import org.testng.annotations.Test;
 
 
 public class webSocketClient {
