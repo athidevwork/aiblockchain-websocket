@@ -55,7 +55,7 @@ public class WebsocketClientEndpoint {
      */
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
-         LOGGER.info("closing websocket session " + userSession.getId());
+        LOGGER.info("closing websocket session " + userSession.getId());
         System.out.println(StringUtils.log(LOGGER) + "closing websocket session " + userSession.getId());
         this.userSession = null;
     }
@@ -67,7 +67,9 @@ public class WebsocketClientEndpoint {
      */
     @OnMessage
     public void onMessage(String message) {
-        if (this.messageHandler != null) {
+        LOGGER.info("onMessage " + message);
+        System.out.println(StringUtils.log(LOGGER) + "onMessage " + message);
+         if (this.messageHandler != null) {
             this.messageHandler.handleMessage(message);
         }
     }

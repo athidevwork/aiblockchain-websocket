@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.aiblockchain.client;
 
+import com.aiblockchain.listener.AIBlockChainListener;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import java.util.ArrayList;
@@ -22,22 +18,22 @@ import org.junit.Test;
 /**
  * @author reed
  */
-public class AIBlockChainListenerClientTest {
+public class AIBlockChainListenerTest {
 
-  private static final Logger LOGGER = Logger.getLogger(AIBlockChainListenerClientTest.class);
+  private static final Logger LOGGER = Logger.getLogger(AIBlockChainListenerTest.class);
 
-  public AIBlockChainListenerClientTest() {
+  public AIBlockChainListenerTest() {
   }
 
   @BeforeClass
   public static void setUpClass() {
     LOGGER.info("getInstance");
-    AIBlockChainListenerClient aiBlockChainListenerClient = AIBlockChainListenerClient.getInstance();
+    AIBlockChainListener aiBlockChainListenerClient = AIBlockChainListener.getInstance();
     assertNotNull(aiBlockChainListenerClient);
-    assertTrue(aiBlockChainListenerClient == AIBlockChainListenerClient.getInstance());
+    assertTrue(aiBlockChainListenerClient == AIBlockChainListener.getInstance());
     LOGGER.info("toString");
     assertEquals(
-            "[AIBlockChainListenerClient, singleton instance present: true, API adapter present: false]",
+            "[AIBlockChainListener, singleton instance present: true, API adapter present: false]",
             aiBlockChainListenerClient.toString());
   }
 
@@ -54,18 +50,18 @@ public class AIBlockChainListenerClientTest {
   }
 
   /**
-   * Test of AIBlockChainListenerClient methods.
+   * Test of AIBlockChainListener methods.
    */
   @Test
   public void testVariousMethods() {
     LOGGER.info("setApiAdapter");
-    AIBlockChainListenerClient instance = AIBlockChainListenerClient.getInstance();
+    AIBlockChainListener instance = AIBlockChainListener.getInstance();
     final AbstractAPIAdapter mockAPIAdapter = new MockAPIAdapter();
     instance.setApiAdapter(mockAPIAdapter);
 
     LOGGER.info("toString");
     assertEquals(
-            "[AIBlockChainListenerClient, singleton instance present: true, API adapter present: true]",
+            "[AIBlockChainListener, singleton instance present: true, API adapter present: true]",
             instance.toString());
   }
 

@@ -3,6 +3,7 @@
  */
 package com.aiblockchain.client;
 
+import com.aiblockchain.model.hana.HanaBlockInfo;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaTransactionInputInfo;
 import com.aiblockchain.model.hana.HanaTransactionOutputInfo;
@@ -35,6 +36,7 @@ public class HanaClient {
       final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:20000/wsticker"));
       // add listener
       clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
+        @Override
         public void handleMessage(String message) {
           LOGGER.info("message: " + message);
           JSONObject jsonObj = new JSONObject(message);
@@ -71,6 +73,9 @@ public class HanaClient {
                 }
               }
             }
+          } else if (resultString.startsWith("{\"hanaBlockInfo\":")) {
+            final HanaBlockInfo hanaBlockInfo = gson.fromJson(resultString, HanaBlockInfo.class);
+            LOGGER.info("new block notification, hanaBlockInfo: " + hanaBlockInfo);
           }
 
           LOGGER.info("*******************************************");

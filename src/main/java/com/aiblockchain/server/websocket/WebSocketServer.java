@@ -1,7 +1,7 @@
 package com.aiblockchain.server.websocket;
 
 
-import com.aiblockchain.client.AIBlockChainListenerClient;
+import com.aiblockchain.listener.AIBlockChainListener;
 import com.aiblockchain.client.AbstractAPIAdapter;
 import com.aiblockchain.server.StringUtils;
 import io.netty.bootstrap.ServerBootstrap;
@@ -27,7 +27,7 @@ public final class WebSocketServer {
   public static final int DEFAULT_PORT = 20000;
   private static Logger logger = Logger.getLogger(WebSocketServer.class);
   // the AI blockchain listener client 
-  private static AIBlockChainListenerClient aiBlockChainListenerClient;
+  private static AIBlockChainListener aiBlockChainListenerClient;
   
   public WebSocketServer(final int port) {
     logger.info("initializing the AI Block Chain Web Socket Server ...");
@@ -62,7 +62,7 @@ public final class WebSocketServer {
    * 
    * @return the the AI blockchain listener client
    */
-  public static AIBlockChainListenerClient getAIBlockChainListenerClient() {
+  public static AIBlockChainListener getAIBlockChainListenerClient() {
     return aiBlockChainListenerClient;
   }
   
@@ -75,7 +75,7 @@ public final class WebSocketServer {
     assert apiAdapter != null : "apiAdapter must not be null";
     
     // construct the singleton instance of the listener client
-    aiBlockChainListenerClient = AIBlockChainListenerClient.getInstance();
+    aiBlockChainListenerClient = AIBlockChainListener.getInstance();
     // insert the API adapter dependency
     aiBlockChainListenerClient.setApiAdapter(apiAdapter);
     logger.info("the AI blockchain listener client is initialized");

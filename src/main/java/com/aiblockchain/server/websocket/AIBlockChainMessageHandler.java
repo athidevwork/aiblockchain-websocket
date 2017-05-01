@@ -3,16 +3,14 @@
  */
 package com.aiblockchain.server.websocket;
 
-import com.aiblockchain.client.AIBlockChainListenerClient;
+import com.aiblockchain.listener.AIBlockChainListener;
 import com.aiblockchain.client.AbstractAPIAdapter;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.server.StringUtils;
 import com.aiblockchain.server.websocket.blockticker.BlockRequest;
 import com.aiblockchain.server.websocket.blockticker.BlockResponse;
 import com.google.gson.Gson;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import java.util.concurrent.atomic.AtomicReference;
 import org.apache.log4j.Logger;
 
 /**
@@ -26,19 +24,16 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
   // stateless JSON serializer/deserializer
   private Gson gson = new Gson();
 
-  // Keep track of the current channel so we can talk directly to the client
-  private AtomicReference<Channel> channel = new AtomicReference<Channel>();
-
   public AIBlockChainMessageHandler() {
     //Preconditions
-    assert AIBlockChainListenerClient.getInstance() != null : "the AIBlockChainListenerClient must be constructed before the WebSocketServer";
+    assert AIBlockChainListener.getInstance() != null : "the AIBlockChainListener must be constructed before the WebSocketServer";
 
-    AIBlockChainListenerClient.getInstance().addHanaListener();
+    AIBlockChainListener.getInstance().addHanaListener();
   }
 
   @Override
   public String handleMessage(ChannelHandlerContext ctx, String frameText) {
-    this.channel.set(ctx.channel());
+    AIBlockChainListener.getInstance().setChannel(ctx.channel());
     BlockResponse blockResponse = new BlockResponse();
     BlockRequest blockRequest = gson.fromJson(frameText, BlockRequest.class);
 
