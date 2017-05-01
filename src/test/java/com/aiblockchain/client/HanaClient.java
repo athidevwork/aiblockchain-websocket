@@ -3,8 +3,8 @@
  */
 package com.aiblockchain.client;
 
-import com.aiblockchain.model.hana.HanaBlockInfo;
 import com.aiblockchain.model.hana.HanaItems;
+import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import com.aiblockchain.model.hana.HanaTransactionInputInfo;
 import com.aiblockchain.model.hana.HanaTransactionOutputInfo;
 import com.aiblockchain.server.websocket.WebsocketClientEndpoint;
@@ -37,45 +37,52 @@ public class HanaClient {
       // add listener
       clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
         @Override
-        public void handleMessage(String message) {
+        public void handleMessage(final String message) {
           LOGGER.info("message: " + message);
           JSONObject jsonObj = new JSONObject(message);
           LOGGER.info("jsonObj: " + jsonObj);
-          String resultString = (String) jsonObj.get("result");
-          LOGGER.info("result: " + resultString);
-          if (resultString.startsWith("{\"hanaBlockItems\":")) {
-            final HanaItems hanaItems = gson.fromJson(resultString, HanaItems.class);
-            LOGGER.info("hanaItems: " + hanaItems);
-            LOGGER.info("");
-            LOGGER.info("hanaBlockItems...");
-            for (final HanaItems.HanaBlockItem hanaBlockItem : hanaItems.getHanaBlockItems()) {
-              final Object[] isValid = HanaItems.isHanaBlockItemValid(hanaBlockItem);
-              if (!(boolean) isValid[0]) {
-                LOGGER.error("************************************************");
-                LOGGER.error("hanaBlockItem failed internal consistency checks for reason " + isValid[1]);
-                LOGGER.error("************************************************");
-              }
-              LOGGER.info("  " + hanaBlockItem);
+          
+          if (jsonObj.has("result")) {
+            // the message is a response to a request from the client
+            String resultString = (String) jsonObj.get("result");
+            LOGGER.info("result: " + resultString);
+            if (resultString.startsWith("{\"hanaBlockItems\":")) {
+              final HanaItems hanaItems = gson.fromJson(resultString, HanaItems.class);
+              LOGGER.info("hanaItems: " + hanaItems);
               LOGGER.info("");
-              LOGGER.info("  hanaTransactionItems...");
-              for (final HanaItems.HanaTransactionItem hanaTransactionItem : hanaBlockItem.getHanaTransactionItems()) {
-                LOGGER.info("    " + hanaTransactionItem);
-                LOGGER.info("");
-                LOGGER.info("    hanaTransactionInputInfos...");
-                for (final HanaTransactionInputInfo hanaTransactionInputInfo : hanaTransactionItem.getHanaTransactionInputInfos()) {
-                  LOGGER.info("      " + hanaTransactionInputInfo);
-                  LOGGER.info("");
+              LOGGER.info("hanaBlockItems...");
+              for (final HanaItems.HanaBlockItem hanaBlockItem : hanaItems.getHanaBlockItems()) {
+                final Object[] isValid = HanaItems.isHanaBlockItemValid(hanaBlockItem);
+                if (!(boolean) isValid[0]) {
+                  LOGGER.error("************************************************");
+                  LOGGER.error("hanaBlockItem failed internal consistency checks for reason " + isValid[1]);
+                  LOGGER.error("************************************************");
                 }
-                LOGGER.info("    hanaTransactionOutputInfos...");
-                for (final HanaTransactionOutputInfo hanaTransactionOutputInfo : hanaTransactionItem.getHanaTransactionOutputInfos()) {
-                  LOGGER.info("      " + hanaTransactionOutputInfo);
+                LOGGER.info("  " + hanaBlockItem);
+                LOGGER.info("");
+                LOGGER.info("  hanaTransactionItems...");
+                for (final HanaItems.HanaTransactionItem hanaTransactionItem : hanaBlockItem.getHanaTransactionItems()) {
+                  LOGGER.info("    " + hanaTransactionItem);
                   LOGGER.info("");
+                  LOGGER.info("    hanaTransactionInputInfos...");
+                  for (final HanaTransactionInputInfo hanaTransactionInputInfo : hanaTransactionItem.getHanaTransactionInputInfos()) {
+                    LOGGER.info("      " + hanaTransactionInputInfo);
+                    LOGGER.info("");
+                  }
+                  LOGGER.info("    hanaTransactionOutputInfos...");
+                  for (final HanaTransactionOutputInfo hanaTransactionOutputInfo : hanaTransactionItem.getHanaTransactionOutputInfos()) {
+                    LOGGER.info("      " + hanaTransactionOutputInfo);
+                    LOGGER.info("");
+                  }
                 }
               }
+            } else {
+              LOGGER.error("unexpected server result " + resultString);
             }
-          } else if (resultString.startsWith("{\"hanaBlockInfo\":")) {
-            final HanaBlockInfo hanaBlockInfo = gson.fromJson(resultString, HanaBlockInfo.class);
-            LOGGER.info("new block notification, hanaBlockInfo: " + hanaBlockInfo);
+          } else if (message.startsWith("{\"hanaBlockInfo\":")) {
+            // the message is initiatied by the server
+            final HanaBlockItem hanaBlockItem = gson.fromJson(message, HanaBlockItem.class);
+            LOGGER.info("new block notification, hanaBlockItem: " + hanaBlockItem);
           }
 
           LOGGER.info("*******************************************");
@@ -351,5 +358,4 @@ public class HanaClient {
 //      transactionOutputIndex: 0
 //      address: AQTqW5xZaegAsFC7MMAhfyTUn44gf7CBK3
 //      amount: 50.0]
-  
 }

@@ -1,6 +1,5 @@
 package com.aiblockchain.server.websocket;
 
-import com.aiblockchain.server.StringUtils;
 import java.net.URI;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
@@ -43,7 +42,6 @@ public class WebsocketClientEndpoint {
     @OnOpen
     public void onOpen(Session userSession) {
         LOGGER.info("opening websocket session " + userSession.getId());
-        System.out.println(StringUtils.log(LOGGER) + "opening websocket session " + userSession.getId());
         this.userSession = userSession;
     }
 
@@ -56,19 +54,17 @@ public class WebsocketClientEndpoint {
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
         LOGGER.info("closing websocket session " + userSession.getId());
-        System.out.println(StringUtils.log(LOGGER) + "closing websocket session " + userSession.getId());
         this.userSession = null;
     }
 
     /**
-     * Callback hook for Message Events. This method will be invoked when a client send a message.
+     * Callback hook for Message Events. This method will be invoked when a client receives a message from the websocket server.
      *
      * @param message The text message
      */
     @OnMessage
     public void onMessage(String message) {
         LOGGER.info("onMessage " + message);
-        System.out.println(StringUtils.log(LOGGER) + "onMessage " + message);
          if (this.messageHandler != null) {
             this.messageHandler.handleMessage(message);
         }
@@ -80,6 +76,7 @@ public class WebsocketClientEndpoint {
      * @param msgHandler
      */
     public void addMessageHandler(MessageHandler msgHandler) {
+        LOGGER.info("addMessageHandler " + msgHandler);
         this.messageHandler = msgHandler;
     }
 
@@ -89,6 +86,7 @@ public class WebsocketClientEndpoint {
      * @param message
      */
     public void sendMessage(String message) {
+        LOGGER.info("sendMessage " + message);
         this.userSession.getAsyncRemote().sendText(message);
     }
 

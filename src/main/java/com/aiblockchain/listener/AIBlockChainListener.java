@@ -4,7 +4,6 @@
 package com.aiblockchain.listener;
 
 import com.aiblockchain.client.AbstractAPIAdapter;
-import com.aiblockchain.listener.HanaListener;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.server.StringUtils;
 import com.google.gson.Gson;
@@ -74,7 +73,7 @@ public class AIBlockChainListener implements HanaListener {
    * easy to serialize to JSON
    */
   @Override
-  public void newBlockNotification(HanaItems.HanaBlockItem hanaBlockItem) {
+  public void newBlockNotification(final HanaItems.HanaBlockItem hanaBlockItem) {
     //Preconditions
     assert hanaBlockItem != null : "hanaBlockItem must not be null";
 
@@ -85,6 +84,9 @@ public class AIBlockChainListener implements HanaListener {
     } else {
       LOGGER.info("newBlockNotification: " + hanaBlockItem);
       System.out.println(StringUtils.log(LOGGER) + "newBlockNotification: " + hanaBlockItem);
+      LOGGER.info("channel is writable: " + channel.isWritable());
+      System.out.println(StringUtils.log(LOGGER) + "channel is writable: " + channel.isWritable());
+
       final Gson gson = new Gson();
       channel.writeAndFlush(new TextWebSocketFrame(gson.toJson(hanaBlockItem)));
     }
