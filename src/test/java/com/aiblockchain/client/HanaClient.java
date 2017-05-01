@@ -5,6 +5,7 @@ package com.aiblockchain.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,7 +22,11 @@ import com.google.gson.Gson;
  *
  */
 public class HanaClient {
-
+	static Logger logger = Logger.getLogger("HanaClient");
+	
+	public static final String DEFAULT_HOST = "localhost";
+	public static final int DEFAULT_PORT = 20000;
+	 
 	/**
 	 * @param args
 	 */
@@ -30,10 +35,28 @@ public class HanaClient {
             // stateless JSON serializer/deserializer
             Gson gson = new Gson();		
 		   
+            String url = null;
+            int noOfParams = args.length;
+
+            if (noOfParams > 1) {
+                logger.info("Main() Args : " + noOfParams + ", host : " + args[0] + ", port : " + args[1]);
+                url = "ws://" + args[0] + ":" + args[1] + "/wsticker";
+            } else if (noOfParams > 0) {
+              logger.info("Main() Args : " + noOfParams + ", host : " + args[0]);
+              url = "ws://" + args[0] + ":" + DEFAULT_PORT + "/wsticker";
+            } else {
+              logger.info("Main() Args : " + noOfParams);
+              url = "ws://" + DEFAULT_HOST + ":" + DEFAULT_PORT + "/wsticker";
+            }
+            
+            System.out.println("Client Endpoint = " + url);
             // open websocket
 			//final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:8083/wsticker"));
-			final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:20000/wsticker"));
-            // add listener
+			//final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:20000/wsticker"));
+			//final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://aicoin.dynds.org:20000/wsticker"));
+			final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI(url));
+			
+			// add listener
             clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
                 public void handleMessage(String message) {
                     //System.out.println(message);

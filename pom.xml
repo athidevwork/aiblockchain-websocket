@@ -6,6 +6,15 @@
   <name>AI Block Chain Websocket</name>
   <description>AI Block Chain Websocket Services</description>
   
+	<repositories>
+	    <!--other repositories if any-->
+	    <repository>
+	        <id>project.local</id>
+	        <name>project</name>
+	        <url>file:${project.basedir}/repo</url>
+	    </repository>
+	</repositories>
+
   <properties>
     <jdk.version>1.8</jdk.version>
     <junit.version>4.11</junit.version>
@@ -174,7 +183,14 @@
       <artifactId>bitcoinj</artifactId>
       <version>0.11.1</version>
       <scope>test</scope>
-    </dependency>				     	  	 
+    </dependency>		
+    
+    <!-- Local Jars added for compiling for texai -->		
+<!--     <dependency>
+	    <groupId>com.aiblockchain</groupId>
+	    <artifactId>local-AlbusHCN-1.0.jar</artifactId>
+	    <version>1.0</version>
+    </dependency>  -->    	  	 
   </dependencies>  
     
   <build>
