@@ -2,6 +2,7 @@ package com.aiblockchain.server.websocket;
 
 
 
+import com.aiblockchain.server.StringUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -45,6 +46,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
 
    protected void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
       logger.debug("Received incoming frame [{}]" + frame.getClass().getName());
+      System.out.println(StringUtils.log(logger) + "Received incoming frame [{}]" + frame.getClass().getName());
       // Check for closing frame
       if (frame instanceof CloseWebSocketFrame) {
          if (frameBuffer != null) {
@@ -61,6 +63,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
 
       if (frame instanceof PongWebSocketFrame) {
          logger.info("Pong frame received");
+         System.out.println(StringUtils.log(logger) + "Pong frame received");
          return;
       }
 
@@ -95,6 +98,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
       // check request path here and process any HTTP REST calls
       // return true if message has been processed
 	  logger.info("Rest service called from context ... " + ctx.name());
+	  System.out.println(StringUtils.log(logger) + "Rest service called from context ... " + ctx.name());
       return false;
    }
 
@@ -131,7 +135,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
          // Handshake. Ideally you'd want to configure your websocket uri
          String url = "ws://" + req.headers().get("Host") + "/wsticker";
          logger.info("Web Socket Url = " + url);
-         //System.out.println("Web Socket Url = " + url);
+         System.out.println(StringUtils.log(logger) + "Web Socket Url = " + url);
          WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(url, null, false);
          handshaker = wsFactory.newHandshaker(req);
          if (handshaker == null) {

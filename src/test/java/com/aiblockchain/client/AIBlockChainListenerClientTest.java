@@ -67,16 +67,6 @@ public class AIBlockChainListenerClientTest {
     assertEquals(
             "[AIBlockChainListenerClient, singleton instance present: true, API adapter present: true]",
             instance.toString());
-
-    LOGGER.info("addHanaListener");
-    instance.addHanaListener();
-
-    LOGGER.info("getBlocksStartingWith");
-    long startingBlockNumber = 0L;
-    int nbrOfBlocks = 10;
-    HanaItems hanaItems = instance.getBlocksStartingWith(startingBlockNumber, nbrOfBlocks);
-    assertNotNull(hanaItems);
-    assertEquals("[HanaItems, 1 hanaBlockItems]", hanaItems.toString());
   }
 
   /**

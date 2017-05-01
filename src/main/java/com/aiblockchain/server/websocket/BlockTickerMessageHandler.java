@@ -4,6 +4,7 @@ import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
 import com.aiblockchain.model.hana.util.HanaUtil;
+import com.aiblockchain.server.StringUtils;
 import com.aiblockchain.server.websocket.blockticker.TickerRequest;
 import com.aiblockchain.server.websocket.blockticker.TickerResponse;
 import com.eclipsesource.json.JsonArray;
@@ -86,6 +87,7 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
       TickerRequest tickerRequest = gson.fromJson(frameText, TickerRequest.class);
 	  
       logger.info("Ticket Server handleMessage " + frameText);
+      System.out.println(StringUtils.log(logger) + "Ticket Server handleMessage " + frameText);
 		 
       if (tickerRequest.getCommand() != null) {
          if ("add".equals(tickerRequest.getCommand())) {
@@ -99,6 +101,7 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
             tickerResponse.setResult("success");
          } else if ("getnewblock".equals(tickerRequest.getCommand())) {
         	 logger.info("Getting blocks from ai block chain starting from number 1 to 10");
+        	 System.out.println(StringUtils.log(logger) + "Getting blocks from ai block chain starting from number 1 to 10");
 			//HanaItems hanaItems = APIAdapter.getInstance().getBlocksStartingWith(1, 10);
             tickerResponse.setResult("success");
          } else {
@@ -171,7 +174,7 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
 
                HanaInfo hanaInfo = new HanaInfo("HanaBlockInfo", hanaBlockInfo);
                String response = gson.toJson(hanaInfo);
-               System.out.println("block response = " + response);
+               System.out.println(StringUtils.log(logger) + "block response = " + response);
                //String response = gson.toJson(hanaBlockInfo);
 
                // send the client an update
@@ -186,7 +189,7 @@ public class BlockTickerMessageHandler implements WebSocketMessageHandler {
 	            
 	            hanaInfo = new HanaInfo("HanaTransactionInfo", transInfo);
 	            response = gson.toJson(hanaInfo);
-	            System.out.println("trans response = " + response);
+	            System.out.println(StringUtils.log(logger) + "trans response = " + response);
 	            channel.get().writeAndFlush(new TextWebSocketFrame(response)); 
 	            */              
             }

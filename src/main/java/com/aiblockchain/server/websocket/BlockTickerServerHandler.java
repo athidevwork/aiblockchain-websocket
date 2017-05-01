@@ -1,6 +1,7 @@
 package com.aiblockchain.server.websocket;
 
 
+import com.aiblockchain.server.StringUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -59,6 +60,7 @@ public class BlockTickerServerHandler extends SimpleChannelInboundHandler<Object
 
       if (frame instanceof PongWebSocketFrame) {
          logger.info("Pong frame received");
+         System.out.println(StringUtils.log(logger) + "Pong frame received");
          return;
       }
 
@@ -129,7 +131,7 @@ public class BlockTickerServerHandler extends SimpleChannelInboundHandler<Object
          // Handshake. Ideally you'd want to configure your websocket uri
          String url = "ws://" + req.headers().get("Host") + "/wsticker";
          logger.info("Web Socket Url = " + url);
-         System.out.println("Web Socket Url = " + url);
+         System.out.println(StringUtils.log(logger) + "Web Socket Url = " + url);
          WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(url, null, false);
          handshaker = wsFactory.newHandshaker(req);
          if (handshaker == null) {

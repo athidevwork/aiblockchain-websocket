@@ -21,6 +21,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
     @Override
     public void initChannel(SocketChannel ch) throws Exception {
     	logger.info("Initializing Channel : " + ch.toString());
+    	System.out.println("Initializing Channel : " + ch.toString());
         ChannelPipeline pipeline = ch.pipeline();
 
         pipeline.addLast(new HttpServerCodec());

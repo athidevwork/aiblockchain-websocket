@@ -3,6 +3,7 @@ package com.aiblockchain.server.websocket;
 
 import com.aiblockchain.client.AIBlockChainListenerClient;
 import com.aiblockchain.client.AbstractAPIAdapter;
+import com.aiblockchain.server.StringUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -30,6 +31,7 @@ public final class WebSocketServer {
   
   public WebSocketServer(final int port) {
     logger.info("initializing the AI Block Chain Web Socket Server ...");
+    System.out.println(StringUtils.log(logger) + "initializing the AI Block Chain Web Socket Server ...");
     
     EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -42,12 +44,15 @@ public final class WebSocketServer {
 
       Channel ch = b.bind(port).sync().channel();
       logger.info("Web Socket Server started in port: " + port);
+      System.out.println(StringUtils.log(logger) + "Web Socket Server started in port: " + port);
       ch.closeFuture().sync();
     } catch (InterruptedException ex) {
       // ignore
     	logger.info("Got an interruped exception" + ex);
+    	System.out.println(StringUtils.log(logger) + "Got an interruped exception" + ex);
     } finally {
       logger.info("Web Socket Server shutdown started");
+      System.out.println(StringUtils.log(logger) + "Web Socket Server shutdown started");
       bossGroup.shutdownGracefully();
       workerGroup.shutdownGracefully();
     }
@@ -60,7 +65,6 @@ public final class WebSocketServer {
   public static AIBlockChainListenerClient getAIBlockChainListenerClient() {
     return aiBlockChainListenerClient;
   }
-  
   
   /** Initialize the AI blockchain listener client from the software agent system.
    * 
@@ -75,6 +79,7 @@ public final class WebSocketServer {
     // insert the API adapter dependency
     aiBlockChainListenerClient.setApiAdapter(apiAdapter);
     logger.info("the AI blockchain listener client is initialized");
+    System.out.println(StringUtils.log(logger) + "the AI blockchain listener client is initialized");
   }
   
   public static void main(String[] args) throws Exception {

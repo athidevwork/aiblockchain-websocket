@@ -1,7 +1,7 @@
 package com.aiblockchain.server.websocket;
 
+import com.aiblockchain.server.StringUtils;
 import java.net.URI;
-
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -10,6 +10,7 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
+import org.apache.log4j.Logger;
 
 /**
  * WebsocketClientEndpoint
@@ -19,6 +20,9 @@ import javax.websocket.WebSocketContainer;
 @ClientEndpoint
 public class WebsocketClientEndpoint {
 
+    // the logger
+    private static final Logger LOGGER = Logger.getLogger(WebsocketClientEndpoint.class);
+  
     Session userSession = null;
     private MessageHandler messageHandler;
 
@@ -38,7 +42,8 @@ public class WebsocketClientEndpoint {
      */
     @OnOpen
     public void onOpen(Session userSession) {
-        System.out.println("opening websocket session " + userSession.getId());
+        LOGGER.info("opening websocket session " + userSession.getId());
+        System.out.println(StringUtils.log(LOGGER) + "opening websocket session " + userSession.getId());
         this.userSession = userSession;
     }
 
@@ -50,7 +55,8 @@ public class WebsocketClientEndpoint {
      */
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
-        System.out.println("closing websocket session " + userSession.getId());
+         LOGGER.info("closing websocket session " + userSession.getId());
+        System.out.println(StringUtils.log(LOGGER) + "closing websocket session " + userSession.getId());
         this.userSession = null;
     }
 
