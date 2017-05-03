@@ -5,15 +5,21 @@ package com.aiblockchain.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.aiblockchain.model.hana.HanaBlockInfo;
+import com.aiblockchain.model.hana.HanaItems;
+import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
+import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
 import com.aiblockchain.model.hana.HanaTransactionInfo;
 import com.aiblockchain.model.hana.HanaTransactionInputInfo;
 import com.aiblockchain.model.hana.HanaTransactionOutputInfo;
+import com.aiblockchain.model.hana.util.HanaUtil;
 import com.aiblockchain.server.websocket.WebsocketClientEndpoint;
 import com.google.gson.Gson;
 
@@ -34,6 +40,7 @@ public class HanaClient {
 		try {			
             // stateless JSON serializer/deserializer
             Gson gson = new Gson();		
+    		HanaUtil util = new HanaUtil();
 		   
             String url = null;
             int noOfParams = args.length;
@@ -106,10 +113,39 @@ public class HanaClient {
 	            				break;
 	                    }	
                     }
-                    else {
-                    	System.out.println(jsonObj);
+                    else {                	
+                    	if (jsonObj.has("result")) {
+                    		System.out.println(jsonObj);
+                    		String result = jsonObj.getString("result");
+                    		//System.out.println(result);
+                    		
+                    		HanaItems hanaItems = gson.fromJson(result, HanaItems.class);
+                    		
+                    		List<HanaBlockItem> blockItemsList = util.getBlockItems(hanaItems);
+                    	    for (HanaBlockItem item : blockItemsList) {
+                        		HanaBlockItem blockItem = util.getBlockItem(gson, item);                     	    
+                        	    util.getTransactionItems(gson, blockItem);
+                    	    }
+                    	}
+                    	else if (jsonObj.has("hanaTransactionItems")) {
+                    		System.out.println(jsonObj);
+                    		JSONArray jsonArray = jsonObj.getJSONArray("hanaTransactionItems");
+                    		
+                    		if (jsonArray.length() > 0) {
+                    			for (int i = 0; i < jsonArray.length(); i++) {
+                    	        	JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    	        	String json2Str = jsonObject.toString();                    	        	
+                            		HanaTransactionItem transactionItem = gson.fromJson(json2Str, HanaTransactionItem.class);
+                            		util.getHanaTransactionItem(gson, util, transactionItem); 
+                    			}
+                    		}
+                    	}
+                    	else
+                    		System.out.println(jsonObj);
                     }
-                   System.out.println("*******************************************");
+                   System.out.println("**************************************************************************************");
+                   LocalDateTime currentTime = LocalDateTime.now();
+                   System.out.println("Current DateTime: " + currentTime);
                 }
             });
 
@@ -118,10 +154,21 @@ public class HanaClient {
             clientEndPoint.sendMessage("{\"command\":\"getnewblock\", \"blockNumber\":\"1\", \"numberOfBlocks\":\"2\"}");
 
             // wait for messages from websocket
-            Thread.sleep(50000);
-
-        } catch (InterruptedException ex) {
-            System.err.println("InterruptedException exception: " + ex.getMessage());
+            //Thread.sleep(100000);
+            //System.out.println("Waking up on Main thread");
+            try {
+                Object lock = new Object();
+                synchronized (lock) {
+                    while (true) {
+                        lock.wait();
+                    }
+                }
+            } catch (InterruptedException ex) {
+            	System.err.println("InterruptedException exception: " + ex.getMessage());
+            }
+            System.out.println("End of program");
+        //} catch (InterruptedException ex) {
+            //System.err.println("Thread InterruptedException exception: " + ex.getMessage());
         } catch (URISyntaxException ex) {
             System.err.println("URISyntaxException exception: " + ex.getMessage());
         }

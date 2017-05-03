@@ -39,6 +39,12 @@ public class LoadTransactionsClient {
 	public static void main(String[] args) {
 		Logger logger = Logger.getLogger("HanaLoadClient");
 
+		setupLoadTestConfig(logger);
+		//BitcoinRPCAccess ba = new BitcoinRPCAccess("rpc", "rpc", 31416, "");	
+		//ba.sendToAddress(address, amount);	
+	}
+
+	private static void setupLoadTestConfig(Logger logger) {
 		try {
 			File waFile = new File("src/test/resources/loadTestConfig.xml");
 			
@@ -117,8 +123,6 @@ public class LoadTransactionsClient {
 			logger.info ("Exception occurred - ");
 			e.printStackTrace();
 		}
-		//BitcoinRPCAccess ba = new BitcoinRPCAccess("rpc", "rpc", 31416, "");	
-		//ba.sendToAddress(address, amount);	
 	}
 	
 	private static int getRandomNumberInRange(int min, int max) {

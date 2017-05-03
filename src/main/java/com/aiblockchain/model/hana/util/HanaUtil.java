@@ -5,6 +5,7 @@ package com.aiblockchain.model.hana.util;
 
 import com.aiblockchain.model.hana.HanaBlockInfo;
 import com.aiblockchain.model.hana.HanaInfo;
+import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
 import com.aiblockchain.model.hana.HanaTransactionInfo;
@@ -13,6 +14,9 @@ import com.aiblockchain.model.hana.HanaTransactionOutputInfo;
 import com.google.gson.Gson;
 import java.util.List;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * @author Athi
@@ -20,6 +24,22 @@ import org.apache.log4j.Logger;
  */
 public class HanaUtil {
 	Logger l = Logger.getLogger(HanaUtil.class);
+	
+	public List<HanaBlockItem> getBlockItems(HanaItems hanaItems) {
+		List<HanaBlockItem> BlockItemList = hanaItems.getHanaBlockItems();
+		String jsonStr = new Gson().toJson(BlockItemList);
+		//l.info("Hana transaction item = " + jsonStr);
+		//l.info("-------------");
+		return BlockItemList;
+	}
+	
+	public HanaBlockItem getBlockItem(Gson gson, HanaBlockItem item) {
+		HanaBlockItem blockItem = gson.fromJson(GetHanaBlockItem(item), HanaBlockItem.class);
+		String jsonStr = GetHanaBlockItem(blockItem);
+		//System.out.println(jsonStr);
+		System.out.println(gson.fromJson(getHanaBlockInfo(blockItem), HanaBlockInfo.class));
+		return blockItem;
+	}
 	
 	public String wrapObjectInHanaInfo(String hanaObject, String objectType) {
 		HanaInfo hanaInfo = new HanaInfo(objectType, hanaObject);
@@ -42,6 +62,64 @@ public class HanaUtil {
 		//l.info("=======================");
 		return jsonStr;
 	}
+	
+	public void getTransactionItems(Gson gson, HanaBlockItem blockItem) {
+		List<HanaTransactionItem> transactionList = getTransactionItem(blockItem);
+		for (HanaTransactionItem transitem : transactionList) {
+			System.out.println(gson.fromJson(getTransactionInfo(transitem), HanaTransactionInfo.class));
+			
+			JSONArray jsonArray = new JSONArray(getTransactionInputInfo(transitem));
+			if (jsonArray.length() > 0) {
+				for (int i = 0; i < jsonArray.length(); i++) {
+		        	JSONObject jsonObject = jsonArray.getJSONObject(i);
+		        	String json1Str = jsonObject.toString();
+		        	HanaTransactionInputInfo hanaTransInputInfo = gson.fromJson(json1Str, HanaTransactionInputInfo.class);
+					System.out.println("Transaction Input = " + hanaTransInputInfo);		                    			
+				}
+			}
+			
+			jsonArray = new JSONArray(getTransactionOutputInfo(transitem));
+			if (jsonArray.length() > 0) {
+				for (int i = 0; i < jsonArray.length(); i++) {
+		        	JSONObject jsonObject = jsonArray.getJSONObject(i);
+		        	String json1Str = jsonObject.toString();
+		        	HanaTransactionOutputInfo hanaTransOutputInfo = gson.fromJson(json1Str, HanaTransactionOutputInfo.class);
+					System.out.println("Transaction Output = " + hanaTransOutputInfo);		                    			
+				}
+			}
+		}
+	}
+	
+	public void getHanaTransactionItem(Gson gson, HanaUtil util, HanaTransactionItem transactionItem) {
+		JSONArray jsonArray = new JSONArray(getTransactionInputInfo(transactionItem));
+		if (jsonArray.length() > 0) {
+			for (int i = 0; i < jsonArray.length(); i++) {
+	        	JSONObject jsonObject = jsonArray.getJSONObject(i);
+	        	String json1Str = jsonObject.toString();
+	        	HanaTransactionInputInfo hanaTransInputInfo = gson.fromJson(json1Str, HanaTransactionInputInfo.class);
+				System.out.println("Transaction Input = " + hanaTransInputInfo);		                    			
+			}
+		}
+		
+		jsonArray = new JSONArray(getTransactionOutputInfo(transactionItem));
+		if (jsonArray.length() > 0) {
+			for (int i = 0; i < jsonArray.length(); i++) {
+	        	JSONObject jsonObject = jsonArray.getJSONObject(i);
+	        	String json1Str = jsonObject.toString();
+	        	HanaTransactionOutputInfo hanaTransOutputInfo = gson.fromJson(json1Str, HanaTransactionOutputInfo.class);
+				System.out.println("Transaction Output = " + hanaTransOutputInfo);		                    			
+			}
+		}	
+		System.out.println(gson.fromJson(getTransactionInfo(transactionItem), HanaTransactionInfo.class));
+	}
+
+	public String GetHanaTransactionItem(HanaTransactionItem transactionItem) {
+		String jsonStr = new Gson().toJson(transactionItem);
+		//l.info("Hana block item = " + jsonStr);
+		//l.info("=======================");
+		return jsonStr;
+	}
+	
 	
 	public List<HanaTransactionItem> getTransactionItem(HanaBlockItem blockItem) {
 		List<HanaTransactionItem> transactionList = blockItem.getHanaTransactionItems();
@@ -71,5 +149,5 @@ public class HanaUtil {
 		//l.info("Hana Output Info = " + jsonStr);
 		//l.info("-------------");
 		return jsonStr;
-	}	
+	}
 }
