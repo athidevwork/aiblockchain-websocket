@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.texai.skill.aicoin.support.BitcoinRPCAccess;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -40,8 +41,48 @@ public class LoadTransactionsClient {
 		Logger logger = Logger.getLogger("HanaLoadClient");
 
 		setupLoadTestConfig(logger);
-		//BitcoinRPCAccess ba = new BitcoinRPCAccess("rpc", "rpc", 31416, "");	
-		//ba.sendToAddress(address, amount);	
+		
+		String senderAddress = getWallet().getFromWalletAddressForName("Athi01");
+		System.out.println("\nSender is Athi01 = " + senderAddress + '\n');
+				
+		getToAddresses();
+		
+		/*BitcoinRPCAccess ba = new BitcoinRPCAccess("rpc", "rpc", 31416, null, "");
+		double balance = ba.getBalance("");
+		System.out.print("Account balance = " + balance);*/
+		//ba.sendToAddress(address, amount);
+	}
+
+	private static void getToAddresses() {
+		Random random = new Random();
+		int randomNumber = random.nextInt(getConfig().getTransactionToOutputMax() + 1 - getConfig().getTransactionToOutputMin()) 
+				+ getConfig().getTransactionToOutputMin();
+		System.out.println("Number of Receivers = " + randomNumber + '\n');
+		
+		for (int i = 0; i < randomNumber; i++) {
+			getToAddress();	
+			getTransactionAmount();
+		}			
+	}
+	
+	private static void getTransactionAmount() {
+		Random random = new Random();
+		int randomNumber = random.nextInt(getConfig().getTransactionAmountMax() + 1 - getConfig().getTransactionAmountMin()) 
+				+ getConfig().getTransactionAmountMin();
+		System.out.println("transaction amount = " + randomNumber + '\n');
+	}
+
+	private static String getToAddress() {
+		Random g2 = new Random();
+		int fromListSize = g2.nextInt(getWallet().getToAddrList().size());
+		String toAddress = null;
+		String toName = null;
+		for (int i2 = 0; i2 < fromListSize; i2++) {
+			toAddress = ((WalletAddress) getWallet().getToAddrList().get(fromListSize)).getAddress();
+			toName = ((WalletAddress) getWallet().getToAddrList().get(fromListSize)).getName();
+		}
+		System.out.print("Receiver = " + toName + " - " + toAddress + ", ");
+		return toAddress;
 	}
 
 	private static void setupLoadTestConfig(Logger logger) {
@@ -83,8 +124,8 @@ public class LoadTransactionsClient {
                 	int amountMin = 0, amountMax =0, fromInputMin = 0, fromInputMax = 0, toOutputMin = 0, toOutputMax = 0;
                     for ( int j = 0; j < transactionChildren.getLength(); j++ ) {
                         Node elem = transactionChildren.item(j);
-                        System.out.println("transaction : " + elem.getNodeName());
-                        System.out.println("value : " +elem.getTextContent());
+                        //System.out.println("transaction : " + elem.getNodeName());
+                        //System.out.println("value : " +elem.getTextContent());
                         switch (elem.getNodeName()) {
                         case "amountMin":
                         	amountMin = Integer.parseInt(elem.getTextContent());
@@ -113,11 +154,11 @@ public class LoadTransactionsClient {
 			System.out.println(getWallet());
 			//System.out.println("Load Test Config");
 			System.out.println(getConfig());
-			System.out.println("Random transaction outputs");
+			/*System.out.println("Random transaction outputs");
 			for (int i = 0; i < 10; i++) {
 				System.out.println(getRandomNumberInRange(getConfig().getTransactionToOutputMin(), 
 														  getConfig().getTransactionToOutputMax()));
-			}
+			}*/
 		}
 		catch (Exception e) {
 			logger.info ("Exception occurred - ");

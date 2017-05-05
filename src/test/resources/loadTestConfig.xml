@@ -2,11 +2,11 @@
 <config>
   <transaction>
     <amountMin>1</amountMin>
-    <amountMax>10</amountMax>
+    <amountMax>5</amountMax>
     <fromInputMin>1</fromInputMin>
     <fromInputMax>1</fromInputMax>
     <toOutputMin>1</toOutputMin>
-    <toOutputMax>5</toOutputMax>
+    <toOutputMax>3</toOutputMax>
   </transaction>
   <wallet>
     <address type="from" name="Athi Windows Default">ARNn43tq4r7KQdLJmMMXp6ybBtLDBWvpXL</address>
@@ -38,6 +38,12 @@
     <address type="to" name="Scott Mac QT Wallet">AZnwRJkaqJCkHhNU8PFDvPb9iWgzFNPEtz</address>
     <address type="to" name="Drew Mac">AahHTnsD2pszRnzjYN8CQvHC1XFB8kw1Bf</address>
       
+    <address type="to" name="turing qt wallet">AFnN5gDiNWzLUffaaF4w81UqZ6JoeeUT1J</address>   
+    <address type="to" name="turing multibit wallet">AQ5kybZTvChjmmiZSFy1t7MQhrMyft2Mcw</address>
+    <address type="to" name="albus multibit wallet">AHCotyoGLwBZ11mhuXhziKMftL8PsXnV8v</address>
+    <address type="to" name="Drew Mac wallet">AahHTnsD2pszRnzjYN8CQvHC1XFB8kw1Bf</address>
+    <address type="to" name="Scott Mac 2 nbr 201">Af54mnua2zSPPcGjaynwS4dvukXRom1Wj9</address>
+    
 	  <address type="to" name="Mac1-101">APbSCBk9bKMuFSUuy9YqF4RHvLhBr15X4W</address>
 	  <address type="to" name="Mac1-102">AUbWhcJLPTfSULN6eU1NNxJ9K7X3umY5rc</address>
 		<address type="to" name="Mac1-103">ATyx2TFAcGeFSWKBcA6g8YNLcU2VA8ysHg</address>
@@ -64,34 +70,33 @@
 		<address type="to" name="Mac1-124">ANW45bX3Q4c2HhPAbFCZz1EvN4Ecq3mLLH</address>
 		<address type="to" name="Mac1-125">AXYfB9qKY92t1WcmibWqKDBVPHGuec3uDy</address>  
 	
+    <address type="to" name="Mac2-201">Af54mnua2zSPPcGjaynwS4dvukXRom1Wj9</address>
+    <address type="to" name="Mac2-202">AGXphfn1mEF1p3nWLTwwLf6i5ar8XdkiJi</address>
+    <address type="to" name="Mac2-203">AHB927WZYCyVUgFjeG7xQi2HLsXuHRcKRq</address>
+    <address type="to" name="Mac2-204">AG7quPjRTUwDzhAsGhz3ice5MVUDMWchx3</address>
+    <address type="to" name="Mac2-205">AK7NtLHEq8MJoWZ8neJS2wTWrbZbbs5Q8c</address>
+    <address type="to" name="Mac2-206">AeVTTf1Y3j8pqa1zf7TEcaSefUmWztBo5t</address>
+    <address type="to" name="Mac2-207">ARYTRHEnE6yehe67zkeoveWVu2Phyn2nEB</address>
+    <address type="to" name="Mac2-208">AQBfRZX1qmWTB4FAtEemDXkuKn9Vao4b52</address>
+    <address type="to" name="Mac2-209">AmfnTBpkFYMAvB1sVcCPE9CvNR7mE2saRL</address>
+    <address type="to" name="Mac2-210">AeQRLU5ozGdcSMP5CM48cKEfwpE7RWfsF5</address>
+    <address type="to" name="Mac2-211">ASXohTiDWH9VG7hhpr1ahVX4xwtphU8Bvg</address>
+    <address type="to" name="Mac2-212">AuqNV3Rhu7zYLy93xuurBMohTe1BqBKFFA</address>
+    <address type="to" name="Mac2-213">Aew5pgZPSwmJPfgerAWd5CVxgTvgHWtpxv</address>
+    <address type="to" name="Mac2-214">AS2u3EQyGM3Ljv41WDdAgYuz1GKEuWEg1J</address>
+    <address type="to" name="Mac2-215">AHGv8aF8LpEHPJTRDA3iA7yYaRxZ6yL9Bq</address>
+    <address type="to" name="Mac2-216">AYLxFGaoQbKSXpnSsQEx6ne1y2NdhokPmt</address>
+    <address type="to" name="Mac2-217">Agg64GTUFyYgR5U6BwPzPak4SsRDreDyvc</address>
+    <address type="to" name="Mac2-218">AaH6FhLs33cdN7m7YcsN9jJDPumQZX1CRT</address>
+    <address type="to" name="Mac2-219">Aa7eM1B9QK9NfuNxATwX5DFL12Df3vxCkw</address>
+    <address type="to" name="Mac2-220">ARZnbhTUG25mdXCXynKecmE4UMmGHzAiqL</address>
+    <address type="to" name="Mac2-221">ApnHUQpGVKmtSsu8DD8nVfRxc3s2UKwvwq</address>
+    <address type="to" name="Mac2-222">AdE1Ce8NSGxrrEk9TYW4dVCt9tNVBfesV9</address>
+    <address type="to" name="Mac2-223">AdE1Ce8NSGxrrEk9TYW4dVCt9tNVBfesV9</address>
+    <address type="to" name="Mac2-224">AzeYdXcprfuUcmmcwAiVyx1fgTzZaw9Hto</address>
+    <address type="to" name="Mac2-225">AW7z8JPPBGDrP3jrKfwpA91KHXXKmMJEJc</address>
+
 <!--
-201 Af54mnua2zSPPcGjaynwS4dvukXRom1Wj9
-202 AGXphfn1mEF1p3nWLTwwLf6i5ar8XdkiJi
-203 AHB927WZYCyVUgFjeG7xQi2HLsXuHRcKRq
-204 AG7quPjRTUwDzhAsGhz3ice5MVUDMWchx3
-205 AK7NtLHEq8MJoWZ8neJS2wTWrbZbbs5Q8c
-206 AeVTTf1Y3j8pqa1zf7TEcaSefUmWztBo5t
-207 ARYTRHEnE6yehe67zkeoveWVu2Phyn2nEB
-208 AQBfRZX1qmWTB4FAtEemDXkuKn9Vao4b52
-209 AmfnTBpkFYMAvB1sVcCPE9CvNR7mE2saRL
-210 AeQRLU5ozGdcSMP5CM48cKEfwpE7RWfsF5
-211 ASXohTiDWH9VG7hhpr1ahVX4xwtphU8Bvg
-212 AuqNV3Rhu7zYLy93xuurBMohTe1BqBKFFA
-213 Aew5pgZPSwmJPfgerAWd5CVxgTvgHWtpxv
-214 AS2u3EQyGM3Ljv41WDdAgYuz1GKEuWEg1J
-215 AHGv8aF8LpEHPJTRDA3iA7yYaRxZ6yL9Bq
-216 AYLxFGaoQbKSXpnSsQEx6ne1y2NdhokPmt
-217 Agg64GTUFyYgR5U6BwPzPak4SsRDreDyvc
-
-218 AaH6FhLs33cdN7m7YcsN9jJDPumQZX1CRT
-219 Aa7eM1B9QK9NfuNxATwX5DFL12Df3vxCkw
-220 ARZnbhTUG25mdXCXynKecmE4UMmGHzAiqL
-221 ApnHUQpGVKmtSsu8DD8nVfRxc3s2UKwvwq
-222 AdE1Ce8NSGxrrEk9TYW4dVCt9tNVBfesV9
-223 AdE1Ce8NSGxrrEk9TYW4dVCt9tNVBfesV9
-224 AzeYdXcprfuUcmmcwAiVyx1fgTzZaw9Hto
-225 AW7z8JPPBGDrP3jrKfwpA91KHXXKmMJEJc
-
 301 Akn5tfQDNc8ScbohSUdcYG4GgXSQ2zgxLB
 302 AcvBTfwyM1sAhy1HEzgBWyapuyKfcWiZMV
 303 AqaRVCVUj4P5C3c9iyXShcrfSa8s58niWC

@@ -19,6 +19,14 @@ public class Wallet {
 		return fromAddrList;
 	}
 
+	public String getFromWalletAddressForName(String name) {
+		for (WalletAddress walletAddress : getFromAddrList()) {
+			if (walletAddress.getName().equalsIgnoreCase(name))
+				return walletAddress.getAddress();
+		}
+		return null;
+	}
+	
 	public void setFromAddrList(List<WalletAddress> fromAddrList) {
 		this.fromAddrList = fromAddrList;
 	}

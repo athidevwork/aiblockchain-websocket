@@ -186,11 +186,13 @@
     </dependency>		
     
     <!-- Local Jars added for compiling for texai -->		
-<!--     <dependency>
-	    <groupId>com.aiblockchain</groupId>
-	    <artifactId>local-AlbusHCN-1.0.jar</artifactId>
+    <dependency>
+	    <groupId>org.texai</groupId>
+	    <artifactId>CoinSkills</artifactId>
 	    <version>1.0</version>
-    </dependency>  -->    	  	 
+	    <scope>system</scope>
+      <systemPath>${basedir}/lib/CoinSkills-1.0.jar</systemPath>
+    </dependency>     	  	 
   </dependencies>  
     
   <build>
