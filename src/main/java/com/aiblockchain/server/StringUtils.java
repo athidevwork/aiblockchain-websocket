@@ -9,7 +9,6 @@ package com.aiblockchain.server;
  *
  * Copyright (C) 2006 Stephen L. Reed.
  */
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +29,7 @@ import org.apache.log4j.Logger;
 public final class StringUtils {
 
   // the logger
-  private static final Logger LOGGER = Logger.getLogger(StringUtils.class);  
+  private static final Logger LOGGER = Logger.getLogger(StringUtils.class);
   // the hex digits
   private static final String HEX_DIGITS = "0123456789abcdef";
 
@@ -40,7 +39,32 @@ public final class StringUtils {
   private StringUtils() {
   }
 
-  /** Returns a string having each item, of the given collection, represented as a string on a separate line.
+  /**
+   * Returns a string containing the current thread name and the logger class, which is useful when the logger is conflicted or
+   * otherwise not working right.
+   *
+   * @param logger the caller's logger
+   * @return a string containing the current thread name and the logger class
+   */
+  public static String log(final Logger logger) {
+    final String loggerClassName = logger.getName();
+    int index = loggerClassName.lastIndexOf('.');
+    final String loggerSimpleClassName;
+    if (index < (loggerClassName.length() - 1)) {
+      loggerSimpleClassName = loggerClassName.substring(index + 1);
+    } else {
+      loggerSimpleClassName = loggerClassName;
+    }
+    return new StringBuilder()
+            .append(Thread.currentThread().getName())
+            .append(" [")
+            .append(loggerSimpleClassName)
+            .append("] ")
+            .toString();
+  }
+
+  /**
+   * Returns a string having each item, of the given collection, represented as a string on a separate line.
    *
    * @param items the given collection
    * @return the string representation of the given items, one per line
@@ -854,9 +878,12 @@ public final class StringUtils {
       final char char1 = string.charAt(i);
       if (char1 == 45) {
         stringBuilder.append(' '); // replace dash with space
-      } else if ((char1 >= 9 && char1 <= 13) || // whitespace
-              char1 == 32 || // space
-              (char1 >= 65 && string.charAt(i) <= 90) || // uppercase letters
+      } else if ((char1 >= 9 && char1 <= 13)
+              || // whitespace
+              char1 == 32
+              || // space
+              (char1 >= 65 && string.charAt(i) <= 90)
+              || // uppercase letters
               (char1 >= 97 && char1 <= 122)) { // lowercase letters
         stringBuilder.append(string.charAt(i));
       }

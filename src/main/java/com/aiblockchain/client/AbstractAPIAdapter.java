@@ -4,7 +4,7 @@ import com.aiblockchain.listener.HanaListener;
 import com.aiblockchain.model.hana.HanaItems;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * APIAdapter.java
@@ -15,6 +15,8 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractAPIAdapter {
 
+  // the singleton instance
+  private static AbstractAPIAdapter apiAdapter;
   // the HANA demonstration listeners
   private final Set<HanaListener> hanaListeners = new HashSet<>();
 
@@ -23,8 +25,17 @@ public abstract class AbstractAPIAdapter {
    *
    */
   public AbstractAPIAdapter() {
+    apiAdapter = this;
   }
 
+  /** Gets the singleton instance of this class.
+   * 
+   * @return the singleton instance of this class, or null if not yet initialized by the AICOperation agent
+   */
+  public static AbstractAPIAdapter getInstance() {
+    return apiAdapter;
+  }
+  
   /** Adds a HANA 2 demonstration listener.
    * 
    * @param hanaListener the HANA 2 demonstration listener which will receive notification of new aicoin-qt blocks

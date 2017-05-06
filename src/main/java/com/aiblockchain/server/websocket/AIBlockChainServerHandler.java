@@ -1,8 +1,8 @@
 package com.aiblockchain.server.websocket;
 
 
-import java.util.logging.Logger;
 
+import com.aiblockchain.server.StringUtils;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -16,6 +16,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -24,18 +25,19 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
  *
  */
 public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Object> {
-   private static final Logger logger = Logger.getLogger("AIBlockChainServerHandler");
+   private static final Logger logger = Logger.getLogger(AIBlockChainServerHandler.class);
 
    protected WebSocketServerHandshaker handshaker;
    private   StringBuilder frameBuffer = null;
    protected WebSocketMessageHandler wsMessageHandler = new AIBlockChainMessageHandler();
-   protected NettyHttpFileHandler httpFileHandler = new NettyHttpFileHandler();
+   //protected NettyHttpFileHandler httpFileHandler = new NettyHttpFileHandler();
    
    public AIBlockChainServerHandler() {
    }
 
    @Override
    protected void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
+	  logger.info("Got msg : " + msg.toString() + " from ctx " + ctx.name());
       if (msg instanceof FullHttpRequest) {
           this.handleHttpRequest(ctx, (FullHttpRequest)msg);
        } else if (msg instanceof WebSocketFrame) {
@@ -44,7 +46,8 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
 	}
 
    protected void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
-      logger.fine("Received incoming frame [{}]" + frame.getClass().getName());
+      logger.debug("Received incoming frame [{}]" + frame.getClass().getName());
+      System.out.println(StringUtils.log(logger) + "Received incoming frame [{}]" + frame.getClass().getName());
       // Check for closing frame
       if (frame instanceof CloseWebSocketFrame) {
          if (frameBuffer != null) {
@@ -61,6 +64,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
 
       if (frame instanceof PongWebSocketFrame) {
          logger.info("Pong frame received");
+         System.out.println(StringUtils.log(logger) + "Pong frame received");
          return;
       }
 
@@ -71,7 +75,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
          if (frameBuffer != null) {
             frameBuffer.append(((ContinuationWebSocketFrame)frame).text());
          } else {
-            logger.warning("Continuation frame received without initial frame.");
+            logger.warn("Continuation frame received without initial frame.");
          }
       } else {
          throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
@@ -95,13 +99,14 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
       // check request path here and process any HTTP REST calls
       // return true if message has been processed
 	  logger.info("Rest service called from context ... " + ctx.name());
+	  System.out.println(StringUtils.log(logger) + "Rest service called from context ... " + ctx.name());
       return false;
    }
 
    protected void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req)
          throws Exception {
       // Handle a bad request.
-      if (!req.decoderResult().isSuccess()) {
+      /*if (!req.decoderResult().isSuccess()) {
          httpFileHandler.sendError(ctx, HttpResponseStatus.BAD_REQUEST);
          return;
       }
@@ -123,7 +128,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
       if ("/".equals(req.uri())) {
          httpFileHandler.sendRedirect(ctx, "/index.html");
          return;
-      }
+      }*/
 
       // check for websocket upgrade request
       String upgradeHeader = req.headers().getAndConvert("Upgrade");
@@ -131,7 +136,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
          // Handshake. Ideally you'd want to configure your websocket uri
          String url = "ws://" + req.headers().get("Host") + "/wsticker";
          logger.info("Web Socket Url = " + url);
-         //System.out.println("Web Socket Url = " + url);
+         System.out.println(StringUtils.log(logger) + "Web Socket Url = " + url);
          WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(url, null, false);
          handshaker = wsFactory.newHandshaker(req);
          if (handshaker == null) {
@@ -142,7 +147,7 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
       } else {
          boolean handled = handleREST(ctx, req);
          if (!handled) {
-            httpFileHandler.sendFile(ctx, req);
+            //httpFileHandler.sendFile(ctx, req);
          }
       }
    }

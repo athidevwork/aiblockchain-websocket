@@ -11,8 +11,10 @@
  */
 package com.aiblockchain.model.hana;
 
+import com.aiblockchain.server.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  * A HanaItems object contains information about one or more aicoin blocks. The contained information objects are in a POJO form (Plain Old
@@ -23,35 +25,52 @@ import java.util.List;
  */
 public class HanaItems {
 
-  // the HANA 2 demonstration block items
-  private List<HanaBlockItem> hanaBlockItems;
+  // the logger
+  private static final Logger LOGGER = Logger.getLogger(HanaItems.class);
   
+  // the HANA 2 demonstration block items, default to empty until set by builder
+  private List<HanaBlockItem> hanaBlockItems = new ArrayList<>();
+
   /**
    * Constructs a new HanaItems instance.
    */
   public HanaItems() {
   }
 
-
-  /** Gets the HANA 2 demonstration block items.
-   * 
+  /**
+   * Gets the HANA 2 demonstration block items.
+   *
    * @return the HANA 2 demonstration block items
    */
   public List<HanaBlockItem> getHanaBlockItems() {
     return hanaBlockItems;
   }
 
-  /** Sets the HANA 2 demonstration block items.
-   * 
+  /**
+   * Sets the HANA 2 demonstration block items.
+   *
    * @param hanaBlockItems the HANA 2 demonstration block items
    */
   public void setHanaBlockItems(List<HanaBlockItem> hanaBlockItems) {
     //Preconditions
     assert hanaBlockItems != null : "hanaBlockItems must not be null";
-    
+
     this.hanaBlockItems = hanaBlockItems;
   }
-  
+
+  /**
+   * Returns a string representation of this object.
+   *
+   * @return a string representation of this object
+   */
+  public String toString() {
+    return (new StringBuilder())
+            .append("[HanaItems, ")
+            .append(hanaBlockItems.size())
+            .append(" hanaBlockItems]")
+            .toString();
+  }
+
   /**
    * Contains a HANA 2 demonstration block information POJO, and a list of its transaction information items.
    */
@@ -657,22 +676,22 @@ public class HanaItems {
    */
   public static void main(final String[] args) {
     final HanaBlockItem hanaBlockItem = makeTestHanaBlockItem();
-    System.out.println("the HANA 2 demonstration block item ...");
-    System.out.println(hanaBlockItem);
-    System.out.println();
-    System.out.println("the HANA 2 demonstration transaction items ...");
+    System.out.println(StringUtils.log(LOGGER) + "the HANA 2 demonstration block item ...");
+    System.out.println(StringUtils.log(LOGGER) + hanaBlockItem);
+    System.out.println(StringUtils.log(LOGGER));
+    System.out.println(StringUtils.log(LOGGER) + "the HANA 2 demonstration transaction items ...");
     for (final HanaTransactionItem hanaTransactionItem : hanaBlockItem.hanaTransactionItems) {
-      System.out.println(hanaTransactionItem);
-      System.out.println();
-      System.out.println("the HANA 2 demonstration transaction input infos ...");
+      System.out.println(StringUtils.log(LOGGER) + hanaTransactionItem);
+      System.out.println(StringUtils.log(LOGGER));
+      System.out.println(StringUtils.log(LOGGER) + "the HANA 2 demonstration transaction input infos ...");
       for (final HanaTransactionInputInfo hanaTransactionInputInfo : hanaTransactionItem.hanaTransactionInputInfos) {
-        System.out.println(hanaTransactionInputInfo);
-        System.out.println();
+        System.out.println(StringUtils.log(LOGGER) + hanaTransactionInputInfo);
+        System.out.println(StringUtils.log(LOGGER));
       }
-      System.out.println("the HANA 2 demonstration transaction output infos ...");
+      System.out.println(StringUtils.log(LOGGER) + "the HANA 2 demonstration transaction output infos ...");
       for (final HanaTransactionOutputInfo hanaTransactionOutputInfo : hanaTransactionItem.hanaTransactionOutputInfos) {
-        System.out.println(hanaTransactionOutputInfo);
-        System.out.println();
+        System.out.println(StringUtils.log(LOGGER) + hanaTransactionOutputInfo);
+        System.out.println(StringUtils.log(LOGGER));
       }
     }
   }
