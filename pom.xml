@@ -4,7 +4,7 @@
 
   <groupId>com.aiblockchain</groupId>
   <artifactId>aiblockchain-websocket</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
   <name>AI Block Chain Websocket</name>
   <description>AI Blockchain Websocket Services</description>
   <packaging>jar</packaging>
@@ -135,7 +135,7 @@
     </dependency>                                                             	    	    	
   </dependencies>  
   
-    <build>
+  <build>
     <pluginManagement>
     </pluginManagement>
 
@@ -177,5 +177,12 @@
       </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+      <id>nexus</id>
+      <url>http://162.243.117.82:8081/repository/maven-releases/</url>
+    </repository>
+  </distributionManagement>
 
 </project>
