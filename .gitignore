@@ -6,6 +6,7 @@
 target/
 server.log
 *.iml
+*.json
 .idea/
 .settings/
 

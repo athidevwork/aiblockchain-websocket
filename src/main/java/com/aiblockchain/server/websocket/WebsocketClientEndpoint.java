@@ -96,7 +96,6 @@ public class WebsocketClientEndpoint {
      * @author Jiji_Sasidharan
      */
     public static interface MessageHandler {
-
         public void handleMessage(String message);
     }
 }
