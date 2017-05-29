@@ -1,10 +1,8 @@
 /**
  * 
  */
-package com.aiblockchain.client;
+package com.aiblockchain.client.secure;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URI;
 
 import javax.net.ssl.SSLEngine;
@@ -24,7 +22,6 @@ import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.ssl.SslHandler;
 
@@ -99,10 +96,32 @@ public class WebSocketClientRunner {
 				port = defaultPort;
 			}
 
+			System.out.println("Uri = " + uri);
+			System.out.println("Connecting to " + uri.getHost() + ":" + uri.getPort());
 			Channel ch = b.connect(uri.getHost(), port).sync().channel();
 			handler.handshakeFuture().sync();
 
-			BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("WebSocket Client sending message"); 
+            for (int i = 0; i < 1000; i++) { 
+                ch.write(new TextWebSocketFrame("Client Message #" + i)); 
+            } 
+            ch.flush();
+            
+            // Ping 
+            System.out.println("WebSocket Client sending ping"); 
+            ch.write(new PingWebSocketFrame(Unpooled.copiedBuffer(new byte[]{1, 2, 3, 4, 5, 6}))); 
+            ch.flush();
+            
+            // Close 
+            System.out.println("WebSocket Client sending close"); 
+            ch.write(new CloseWebSocketFrame()); 
+            ch.flush();
+            
+            // WebSocketClientHandler will close the connection when the server 
+            // responds to the CloseWebSocketFrame. 
+            ch.closeFuture().sync(); 
+            
+			/*BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 			while (true) {
 				String msg = console.readLine();
 				if (msg == null) {
@@ -118,7 +137,7 @@ public class WebSocketClientRunner {
 					WebSocketFrame frame = new TextWebSocketFrame(msg);
 					ch.writeAndFlush(frame);
 				}
-			}
+			}*/
 		} finally {
 			group.shutdownGracefully();
 		}

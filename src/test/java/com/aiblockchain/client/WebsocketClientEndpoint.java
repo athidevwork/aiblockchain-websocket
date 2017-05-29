@@ -1,4 +1,4 @@
-package com.aiblockchain.server.websocket;
+package com.aiblockchain.client;
 
 import java.net.URI;
 import javax.websocket.ClientEndpoint;

@@ -1,12 +1,13 @@
 /**
  * 
  */
-package com.aiblockchain.client;
+package com.aiblockchain.client.secure;
 
 import java.security.KeyStore;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.log4j.Logger;

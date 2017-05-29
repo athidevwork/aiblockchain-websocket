@@ -220,14 +220,15 @@
         <version>3.0.2</version>
         <configuration>
           <!-- DO NOT include log4j.properties file in your Jar -->
-          <excludes>
+          <!-- <excludes>
             <exclude>**/log4j.properties</exclude>
-          </excludes>
+          </excludes> -->
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
-              <mainClass>com.aiblockchain.server.websocket.WebSocketServer</mainClass>
+              <!-- <mainClass>com.aiblockchain.server.websocket.WebSocketServer</mainClass> -->
+              <mainClass>com.aiblockchain.server.websocket.WebSocketSslServer</mainClass>
             </manifest>
           </archive>
         </configuration>

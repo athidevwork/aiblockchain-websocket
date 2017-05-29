@@ -11,7 +11,6 @@ import com.aiblockchain.model.hana.HanaTransactionOutputInfo;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import com.aiblockchain.model.hana.HanaItems.HanaTransactionItem;
 import com.aiblockchain.model.hana.util.HanaUtil;
-import com.aiblockchain.server.websocket.WebsocketClientEndpoint;
 import com.google.gson.Gson;
 
 import java.io.BufferedWriter;

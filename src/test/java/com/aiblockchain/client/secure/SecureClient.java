@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.aiblockchain.client;
+package com.aiblockchain.client.secure;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.aiblockchain.client.WebsocketClientEndpoint;
 import com.aiblockchain.model.hana.HanaBlockInfo;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
@@ -33,11 +34,11 @@ import com.google.gson.Gson;
  * @author Athi
  *
  */
-public class HanaClient {
-	private static final Logger LOGGER = Logger.getLogger(HanaClient.class);
+public class SecureClient {
+	private static final Logger LOGGER = Logger.getLogger(SecureClient.class);
 
 	public static final String DEFAULT_HOST = "localhost";
-	public static final int DEFAULT_PORT = 20000;
+	public static final int DEFAULT_PORT = 20443;
 
 	// stateless JSON serializer/deserializer
 	private static Gson gson = new Gson();		
@@ -54,13 +55,13 @@ public class HanaClient {
 
 			if (noOfParams > 1) {
 				LOGGER.info("Main() Args : " + noOfParams + ", host : " + args[0] + ", port : " + args[1]);
-				url = "ws://" + args[0] + ":" + args[1] + "/wsticker";
+				url = "wss://" + args[0] + ":" + args[1] + "/websocket";
 			} else if (noOfParams > 0) {
 				LOGGER.info("Main() Args : " + noOfParams + ", host : " + args[0]);
-				url = "ws://" + args[0] + ":" + DEFAULT_PORT + "/wsticker";
+				url = "wss://" + args[0] + ":" + DEFAULT_PORT + "/websocket";
 			} else {
 				LOGGER.info("Main() Args : " + noOfParams);
-				url = "ws://" + DEFAULT_HOST + ":" + DEFAULT_PORT + "/wsticker";
+				url = "wss://" + DEFAULT_HOST + ":" + DEFAULT_PORT + "/websocket";
 			}
 
 			LOGGER.info("Client Endpoint = " + url);

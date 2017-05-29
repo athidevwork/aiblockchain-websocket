@@ -1,4 +1,4 @@
-package com.aiblockchain.client;
+package com.aiblockchain.client.secure;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -37,6 +37,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    	System.out.println("Starting handshake!");
         handshaker.handshake(ctx.channel());
     }
 
@@ -50,6 +51,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         cause.printStackTrace();
 
         if (!handshakeFuture.isDone()) {
+        	System.out.println("WebSocket Client handshake failure!");
             handshakeFuture.setFailure(cause);
         }
 

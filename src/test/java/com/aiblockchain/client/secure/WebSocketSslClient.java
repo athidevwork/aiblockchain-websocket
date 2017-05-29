@@ -1,4 +1,4 @@
-package com.aiblockchain.client;
+package com.aiblockchain.client.secure;
 
 import java.net.URI;
 
@@ -15,7 +15,7 @@ public class WebSocketSslClient {
 		if (args.length > 0) {
 			uri = new URI(args[0]);
 		} else {
-			uri = new URI("wss://localhost:8443/websocket");
+			uri = new URI("wss://localhost:20443/websocket");
 		}
 
 		new WebSocketClientRunner(uri).run();

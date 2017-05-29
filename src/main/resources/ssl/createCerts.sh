@@ -40,8 +40,11 @@ openssl x509 -in aiblockchain.cert.pem -text -noout
 #install the certificate
 keytool -import -alias theCARoot -keystore aibc_client_keystore.jks -file aiblockchain.cert.pem -trustcacerts
 keytool -import -alias aibc_websocket_client -keystore aibc_client_keystore.jks –file aibc_websocket_client.cer -trustcacerts
+#keytool -import -alias aibc_websocket_server -keystore aibc_client_keystore.jks -file aibc_websocket_server.cer 
 
 keytool -list -v -keystore aibc_client_keystore.jks -storepass changeit
 
 echo "client setup complete"
 echo "=================================================="
+
+#keytool -import -alias aibc_websocket_client -keystore aibc_server_keystore.jks -file aibc_websocket_client.cer 
