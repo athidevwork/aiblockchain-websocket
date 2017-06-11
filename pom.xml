@@ -152,13 +152,13 @@
     </dependency>		
     
     <!-- Local Jars added for compiling for texai -->		
-    <dependency>
+<!--     <dependency>
 	    <groupId>org.texai</groupId>
 	    <artifactId>CoinSkills</artifactId>
 	    <version>1.0</version>
 	    <scope>system</scope>
       <systemPath>${basedir}/lib/CoinSkills-1.0.jar</systemPath>
-    </dependency>     	  	 
+    </dependency>  -->    	  	 
   </dependencies>  
   
     <build>
@@ -218,22 +218,59 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.0.2</version>
-        <configuration>
-          <!-- DO NOT include log4j.properties file in your Jar -->
-          <!-- <excludes>
-            <exclude>**/log4j.properties</exclude>
-          </excludes> -->
+<!--         <configuration>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
-              <!-- <mainClass>com.aiblockchain.server.websocket.WebSocketServer</mainClass> -->
+              <mainClass>com.aiblockchain.server.websocket.WebSocketServer</mainClass>
               <mainClass>com.aiblockchain.server.websocket.WebSocketSslServer</mainClass>
             </manifest>
           </archive>
-        </configuration>
+        </configuration> -->
         <executions>
+		    <!-- create non secured implementation.jar -->
+		    <execution>
+		      <id>non-secured-websockets</id>
+		      <goals>
+		        <goal>jar</goal>
+		      </goals>
+		      <configuration>
+		        <classifier>non-secured-websocket</classifier>
+		        <excludes>
+		          <exclude>**/src/main/resources/ssl/**</exclude>
+		        </excludes>		      
+	          <archive>
+	            <manifest>
+	              <addClasspath>true</addClasspath>
+	              <classpathPrefix>lib/</classpathPrefix>
+	              <mainClass>com.aiblockchain.server.websocket.WebSocketServer</mainClass>
+	            </manifest>
+	          </archive>		      
+		      </configuration>
+        </execution>  
+        <!-- create secured implementation.jar -->
+        <execution>
+          <id>secured-websockets</id>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+          <configuration>
+            <classifier>secured-websocket</classifier>
+            <!-- <excludes>
+              <exclude>**/src/main/resources/ssl/**</exclude>
+            </excludes> -->          
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <classpathPrefix>lib/</classpathPrefix>
+                <mainClass>com.aiblockchain.server.websocket.WebSocketSslServer</mainClass>
+              </manifest>
+            </archive>          
+          </configuration>
+        </execution>               
           <execution>
+            <id>aiblockchain-test</id>
             <goals>
               <goal>test-jar</goal>
             </goals>

@@ -27,18 +27,41 @@ To run Websocket server on port 8083:
 
 >java -Dlog4j.debug -Dlog4j.configuration=log4j.properties -jar target/original-aiblockchain-websocket.jar 8083 $@
 
+
+## Latest updates 
+
+This project had two versions of jar that gets created for namely, 
+#### inon secured websockets****(aiblockchain-websocket-non-secured-websocket.jar)*** 
+and 
+#### secured websockets****(aiblockchain-websocket-secured-websocket.jar)***
+
+There is a runServer.sh script that would run secured or non secured version like given below,
+
+>./runServer.sh (***Non secured websockets by default***)
+>./runServer.sh tls (***secured websockets***)
+
 =================================================================================
 ## TEST CLIENTS
 
-Client would call with this uri  to connect to the websocket on the host
+### Non secured web socket client url:
 
 ```
-ws://localhost:8083/wsticker
+ws://localhost:20000/wsticker
 ```
 
-This is another sample for the client (need to figure out how to use both the handlers in the code)
+### Secured web socket client url:
 
-ws://localhost:8083/websocket/?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9
-ws://localhost:8083/websocket?request=e2lkOjE7cmlkOjI2O3Rva2VuOiI0MzYwNjgxMWM3MzA1Y2NjNmFiYjJiZTExNjU3OWJmZCJ9
+```
+wss://localhost:20443/websocket
+```
 
+There is a index page that is server when the server comes up which would connect 
+to the secured web socket.
+
+
+### Secured web socket page:
+
+```
+https://localhost:20443
+```
 =================================================================================

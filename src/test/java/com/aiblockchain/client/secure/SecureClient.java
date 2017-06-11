@@ -65,7 +65,10 @@ public class SecureClient {
 			}
 
 			LOGGER.info("Client Endpoint = " + url);
-			// open websocket
+			//TODO - This would work only with the non secured webserver due to the WebsocketClientEndpoint used. Need
+			//to change this to use the secure ssl client for secure transactions.
+			
+			// open websocket using non secured protocol
 			//final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:8083/wsticker"));
 			//final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://localhost:20000/wsticker"));
 			//final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI("ws://aicoin.dynds.org:20000/wsticker"));
