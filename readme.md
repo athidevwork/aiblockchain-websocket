@@ -8,6 +8,10 @@ Command to build the package
 
 >mvn clean package
 
+=================================================================================
+
+### Docker build
+
 build.sh script assumes docker is installed in the environment. If not docker commands will fail.
 
 To build the package and create the docker build, Go to the project folder and run 
@@ -16,29 +20,33 @@ To build the package and create the docker build, Go to the project folder and r
 
 This would create two versions of the jar in the target folder, 
 
-**original-aiblockchain-websocket.jar** which does not have any dependant libraries used by runServer.sh 
+* **original-aiblockchain-websocket.jar** which does not have any dependant libraries used by runServer.sh 
 
 and 
 
-**aiblockchain-websocket.jar** which was built specifically to be run a docker container with all dependant libraries included in it.
+* **aiblockchain-websocket.jar** which was built specifically to be run a docker container with all dependant libraries included in it.
 
 
 To run Websocket server on port 8083:
 
 >java -Dlog4j.debug -Dlog4j.configuration=log4j.properties -jar target/original-aiblockchain-websocket.jar 8083 $@
 
+=================================================================================
 
-## Latest updates 
+###  Server build
 
 This project had two versions of jar that gets created for namely, 
-#### inon secured websockets****(aiblockchain-websocket-non-secured-websocket.jar)*** 
+#### Non secured websockets****(aiblockchain-websocket-non-secured-websocket.jar)*** 
 and 
-#### secured websockets****(aiblockchain-websocket-secured-websocket.jar)***
+#### Secured websockets****(aiblockchain-websocket-secured-websocket.jar)***
+
+###  Running Server
 
 There is a runServer.sh script that would run secured or non secured version like given below,
 
->./runServer.sh (***Non secured websockets by default***)
->./runServer.sh tls (***secured websockets***)
+* >./runServer.sh (***Non secured websockets by default***)
+
+* >./runServer.sh tls (***secured websockets***)
 
 =================================================================================
 ## TEST CLIENTS

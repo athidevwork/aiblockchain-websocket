@@ -8,11 +8,14 @@ package com.aiblockchain.server.websocket.blockticker;
  *
  */
 public class ClientRequestImpl implements ClientRequest {
+	private String command;
 
-	@Override
+	public void setCommand(String command) {
+		this.command = command;
+	}
+
 	public String getCommand() {
-		// TODO Auto-generated method stub
-		return null;
+		return command;
 	}
 
 }

@@ -10,8 +10,13 @@ import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import com.aiblockchain.server.StringUtils;
 import com.aiblockchain.server.websocket.blockticker.BlockRequest;
 import com.aiblockchain.server.websocket.blockticker.BlockResponse;
+import com.aiblockchain.server.websocket.blockticker.ClientResponse;
+import com.aiblockchain.server.websocket.blockticker.ClientResponseImpl;
 import com.google.gson.Gson;
 import io.netty.channel.ChannelHandlerContext;
+
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -39,7 +44,53 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
     logger.info("Block Server handleMessage " + frameText);
     logger.info(StringUtils.log(logger) + "Block Server handleMessage " + frameText);
 
-    BlockResponse blockResponse = new BlockResponse();
+    //TODO
+    JsonObject jobj = new Gson().fromJson(frameText, JsonObject.class);
+    String apiCommand = jobj.get("command").toString();
+    
+    ClientResponse clientResponse = new ClientResponseImpl();
+    switch (apiCommand) {
+    case "getnewblock":
+        int blockNumber = jobj.get("blockNumber").toString();
+        int numberOfBlocks = jobj.get("numberOfBlocks").toString();
+        logger.info("Getting blocks from ai block chain starting from number " + blockNumber
+        + " to " + numberOfBlocks);
+		HanaItems hanaItems = AbstractAPIAdapter.getInstance().getBlocksStartingWith(
+								blockNumber, numberOfBlocks);
+		if (hanaItems == null) {
+			clientResponse.setResultMsg("failure-getnewblock request failed");
+		} else {
+			clientResponse.setResultMsg("success");
+			clientResponse.setResult(gson.toJson(hanaItems));
+		}        
+    	break;
+    case "getnewtestblock":
+  	  logger.info("getNewTestBlock");
+  	  HanaBlockItem blockItem = HanaItems.makeTestHanaBlockItem(); 
+  	  logger.info("Test Block Item = " + gson.toJson(blockItem));
+  	  clientResponse.setResultMsg("success");
+  	  clientResponse.setResult(gson.toJson(blockItem));    	
+    	break;
+    case "newFault":
+    	String signatureList = jobj.get("signatureList").toString();
+    	//TODO - BlockRPSAccess
+    	List<String> faultTransactions = AbstractAPIAdapter.getInstance().newFaultNotification(signatureList);
+    	if (faultTransactions == null) {
+    		clientResponse.setResultMsg("failure-newFault request failed");
+    	} else {
+    		clientResponse.setResultMsg("success");
+    		clientResponse.setResult(gson.toJson(faultTransactions));
+    	}    	 	
+    	break;
+    default:
+    	clientResponse.setResultMsg(apiCommand + " failed. Command not specified or not implemented.");
+    	break;
+    }
+    
+    String response = gson.toJson(clientResponse);
+    return response;
+    
+    /*BlockResponse blockResponse = new BlockResponse();
     BlockRequest blockRequest = gson.fromJson(frameText, BlockRequest.class);
     final String command = blockRequest.getCommand();
     logger.info("command " + command);
@@ -69,6 +120,6 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
       blockResponse.setResult("Failed. Command not specified.");
     }
     String response = gson.toJson(blockResponse);
-    return response;
+    return response;*/
   }
 }
