@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.aiblockchain.server.websocket;
+package com.aiblockchain.server.websocket.ssl;
 
 import java.io.File;
 import java.io.FileInputStream;

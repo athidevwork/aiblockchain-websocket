@@ -1,4 +1,4 @@
-package com.aiblockchain.server.websocket;
+package com.aiblockchain.server.websocket.ssl;
 
 
 import javax.net.ssl.SSLEngine;

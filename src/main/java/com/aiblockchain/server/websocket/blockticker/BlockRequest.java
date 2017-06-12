@@ -32,6 +32,7 @@ public void setNumberOfBlocks(int numberOfBlocks) {
 	this.numberOfBlocks = numberOfBlocks;
 }
 
+
 @Override
    public boolean equals(Object o) {
       if (this == o) { return true; }
@@ -62,4 +63,5 @@ public void setNumberOfBlocks(int numberOfBlocks) {
             ", numberOfBlocks='" + numberOfBlocks + '\'' +
             '}';
    }
+
 }

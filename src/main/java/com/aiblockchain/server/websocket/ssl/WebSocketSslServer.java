@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.aiblockchain.server.websocket;
+package com.aiblockchain.server.websocket.ssl;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;

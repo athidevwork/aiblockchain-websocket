@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.aiblockchain.server.websocket;
+package com.aiblockchain.server.websocket.ssl;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpMethod.GET;
