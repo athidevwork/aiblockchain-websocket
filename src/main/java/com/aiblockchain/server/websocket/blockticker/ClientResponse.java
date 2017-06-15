@@ -8,6 +8,7 @@ package com.aiblockchain.server.websocket.blockticker;
  *
  */
 public interface ClientResponse {
-	void setResultMsg(String resultMsg);
+	void setStatus(String status);
+	void setResultType(String resultType);	
 	void setResult(Object response);
 }

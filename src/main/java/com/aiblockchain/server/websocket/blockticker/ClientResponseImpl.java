@@ -8,15 +8,24 @@ package com.aiblockchain.server.websocket.blockticker;
  *
  */
 public class ClientResponseImpl implements ClientResponse {
-	private String resultMsg;
+	private String status;
+	private String resultType;
 	private Object result;
 
-	public String getResultMsg() {
-		return resultMsg;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setResultMsg(String resultMsg) {
-		this.resultMsg = resultMsg;
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getResultType() {
+		return resultType;
+	}
+
+	public void setResultType(String resultType) {
+		this.resultType = resultType;
 	}
 
 	public Object getResult() {

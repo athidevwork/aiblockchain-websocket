@@ -21,6 +21,10 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,8 +33,8 @@ import org.json.JSONObject;
  * @author Athi
  *
  */
-public class WebSocketClient {
-	private static final Logger LOGGER = Logger.getLogger(WebSocketClient.class);
+public class LocalWebSocketClientTest {
+	private static final Logger LOGGER = Logger.getLogger(LocalWebSocketClientTest.class);
 
 	public static final String DEFAULT_HOST = "localhost";
 	public static final int DEFAULT_PORT = 20000;	
@@ -69,11 +73,7 @@ public class WebSocketClient {
 
 					if (jsonObj.has("hanaObjectType")) {
 						String objectType = jsonObj.getString("hanaObjectType");
-						//LOGGER.debug("Object type = " + objectType);
-						//JSONObject hanaInfo = jsonObj.getJSONObject("hanaObject");
-						//LOGGER.debug("Object type = " + hanaInfo);
 						String hanaInfo = jsonObj.getString("hanaObject");
-						//LOGGER.debug("Object = " + hanaInfo);
 
 						//switch based on type to map to appropriate data sent over the wire.
 						switch (objectType) {
@@ -111,8 +111,18 @@ public class WebSocketClient {
 							break;
 						}	
 					}
-					else {                	
-						if (jsonObj.has("result")) {
+					else { 
+						if (jsonObj.has("status")) {
+							String status = jsonObj.getString("status");
+							if (status.equalsIgnoreCase("success")) {
+								JSONObject resultObj = jsonObj.getJSONObject("result");
+								JSONObject hanaBlockInfo = (JSONObject) resultObj.get("hanaBlockInfo");
+								LOGGER.info("Block = " + hanaBlockInfo);								
+							}
+							else
+								LOGGER.info("result status : " + status);
+						}
+						/*if (jsonObj.has("result")) {
 							String resultString = (String) jsonObj.get("result");
 							LOGGER.info("result: " + resultString);
 							if (resultString.startsWith("{\"hanaBlockItems\":")) {
@@ -145,12 +155,12 @@ public class WebSocketClient {
 										}
 									}
 								}
-							} else {
+							} 
+							else {
 								LOGGER.error("unexpected server result " + resultString);
 							}
 							LOGGER.info(jsonObj);
 							String result = jsonObj.getString("result");
-							//LOGGER.debug(result);
 
 							HanaItems hanaItems = gson.fromJson(result, HanaItems.class);
 
@@ -159,7 +169,7 @@ public class WebSocketClient {
 								HanaBlockItem blockItem = util.getBlockItem(gson, item);                     	    
 								util.getTransactionItems(gson, blockItem);
 							}
-						}
+						}*/
 						else if (jsonObj.has("hanaTransactionItems")) {
 							LOGGER.info(jsonObj);
 							JSONArray jsonArray = jsonObj.getJSONArray("hanaTransactionItems");
@@ -174,7 +184,7 @@ public class WebSocketClient {
 							}
 						}
 						else
-							System.out.println(jsonObj);
+							LOGGER.info(jsonObj);
 					}
 					LOGGER.info("**************************************************************************************");
 					LocalDateTime currentTime = LocalDateTime.now();
@@ -188,16 +198,56 @@ public class WebSocketClient {
 			clientEndPoint.sendMessage(getNewBlockMessage);
 
 			try {
-				Object lock = new Object();
+				Thread.sleep(2000);
+				
+				Timer timer = new Timer();
+				TimerTask myTask = new TimerTask() {
+				    @Override
+				    public void run() {
+				    	// whatever you need to do every 5 seconds
+				    	String [] arr = {"newFault", "getnewtestblock"};
+				    	Random random = new Random();
+				    	// randomly selects an index from the arr
+				    	int select = random.nextInt(arr.length); 
+
+				    	String selectedCommand = arr[select];
+				    	LOGGER.info("Random String selected: " + selectedCommand); 
+				    	String newMessage = null;
+				    	switch (selectedCommand) {
+				    	case "getnewtestblock":				    	
+				    		newMessage = "{\"command\":\"" + selectedCommand + "\", \"blockNumber\":\"1\", \"numberOfBlocks\":\"2\"}";	    		
+				    		break;
+				    	case "newFault":
+				    		//String message;
+				    		JSONObject json = new JSONObject();
+				    		json.put("command", selectedCommand);
+				    		//JSONObject signatureObj = new JSONObject();
+				    		JSONArray signatureObj = new JSONArray();
+				    		signatureObj.put("value1");
+				    		signatureObj.put("value2");
+				    		signatureObj.put("value3");
+				    		json.put("signatureList", signatureObj);
+				    		newMessage = json.toString();
+				    		//LOGGER.info("newMessage : " + newMessage);
+				    		//newMessage = "{\"command\":\"" + selectedCommand + "\", \"signatureList\":\"2\"}";
+				    		break;
+				    	}
+				    	LOGGER.info("sending request: " + newMessage);
+				    	clientEndPoint.sendMessage(newMessage);
+				    }
+				};
+
+				timer.schedule(myTask, 5000, 5000);
+				/*Object lock = new Object();
 				synchronized (lock) {
 					while (true) {
 						lock.wait();
 					}
-				}
+				}*/
 			} catch (InterruptedException ex) {
 				System.err.println("InterruptedException exception: " + ex.getMessage());
 			}
-			LOGGER.info("End of program");
+			//LOGGER.info("End of program");
 		} catch (URISyntaxException ex) {
 			LOGGER.info("URISyntaxException exception: " + ex.getMessage());
 			LOGGER.info("done");
@@ -207,7 +257,7 @@ public class WebSocketClient {
   }
 
   private static void testHanaBlock() {
-    Logger l = Logger.getLogger(WebSocketClient.class);
+    Logger l = Logger.getLogger(LocalWebSocketClientTest.class);
     Gson gson = new Gson();
 
     l.info("Start to get contents Hana Block Item");

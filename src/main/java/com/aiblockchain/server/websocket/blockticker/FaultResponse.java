@@ -34,10 +34,10 @@ public class FaultResponse {
 	      if (this == o) { return true; }
 	      if (o == null || getClass() != o.getClass()) { return false; }
 
-	      BlockResponse that = (BlockResponse) o;
+	      FaultResponse that = (FaultResponse) o;
 
 	      if (result != null ? !result.equals(that.result) : that.result != null) { return false; }
-	      if (faultData != null ? !faultData.equals(that.tickerData) : that.tickerData != null) { return false; }
+	      if (faultData != null ? !faultData.equals(that.faultData) : that.faultData != null) { return false; }
 
 	      return true;
 	   }

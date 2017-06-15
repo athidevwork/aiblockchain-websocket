@@ -131,7 +131,9 @@ public class AIBlockChainServerHandler extends SimpleChannelInboundHandler<Objec
       }*/
 
       // check for websocket upgrade request
+	  logger.info("Before handshake upgrade");
       String upgradeHeader = req.headers().getAndConvert("Upgrade");
+      logger.info("upgrade header = " + upgradeHeader);
       if (upgradeHeader != null && "websocket".equalsIgnoreCase(upgradeHeader)) {
          // Handshake. Ideally you'd want to configure your websocket uri
          String url = "ws://" + req.headers().get("Host") + "/wsticker";

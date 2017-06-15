@@ -238,6 +238,7 @@
 		      <configuration>
 		        <classifier>non-secured-websocket</classifier>
 		        <excludes>
+		          <exclude>**/src/main/java/com/aiblockchain/server/websocket/ssl/**</exclude>
 		          <exclude>**/src/main/resources/ssl/**</exclude>
 		        </excludes>		      
 	          <archive>
@@ -256,15 +257,12 @@
             <goal>jar</goal>
           </goals>
           <configuration>
-            <classifier>secured-websocket</classifier>
-            <!-- <excludes>
-              <exclude>**/src/main/resources/ssl/**</exclude>
-            </excludes> -->          
+            <classifier>secured-websocket</classifier>          
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
                 <classpathPrefix>lib/</classpathPrefix>
-                <mainClass>com.aiblockchain.server.websocket.WebSocketSslServer</mainClass>
+                <mainClass>com.aiblockchain.server.websocket.ssl.WebSocketSslServer</mainClass>
               </manifest>
             </archive>          
           </configuration>

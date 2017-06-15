@@ -13,11 +13,13 @@ import com.aiblockchain.server.websocket.blockticker.BlockResponse;
 import com.aiblockchain.server.websocket.blockticker.ClientResponse;
 import com.aiblockchain.server.websocket.blockticker.ClientResponseImpl;
 import com.google.gson.Gson;
+
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 
 /**
  * @author Athi
@@ -44,46 +46,53 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
     logger.info("Block Server handleMessage " + frameText);
     logger.info(StringUtils.log(logger) + "Block Server handleMessage " + frameText);
 
-    //TODO
-    JsonObject jobj = new Gson().fromJson(frameText, JsonObject.class);
+    JSONObject jobj = new JSONObject(frameText);
+    logger.info("Json = " + jobj.toString());
     String apiCommand = jobj.get("command").toString();
     
     ClientResponse clientResponse = new ClientResponseImpl();
     switch (apiCommand) {
     case "getnewblock":
-        int blockNumber = jobj.get("blockNumber").toString();
-        int numberOfBlocks = jobj.get("numberOfBlocks").toString();
+    	logger.info("Processing getnewblock");
+        int blockNumber = Integer.parseInt((String) jobj.get("blockNumber"));
+        int numberOfBlocks = Integer.parseInt((String) jobj.get("numberOfBlocks"));
         logger.info("Getting blocks from ai block chain starting from number " + blockNumber
         + " to " + numberOfBlocks);
 		HanaItems hanaItems = AbstractAPIAdapter.getInstance().getBlocksStartingWith(
 								blockNumber, numberOfBlocks);
 		if (hanaItems == null) {
-			clientResponse.setResultMsg("failure-getnewblock request failed");
+			clientResponse.setStatus("failure-getnewblock request failed");
 		} else {
-			clientResponse.setResultMsg("success");
+			clientResponse.setStatus("success");
+			clientResponse.setResultType("HanaItems");
 			clientResponse.setResult(gson.toJson(hanaItems));
 		}        
     	break;
     case "getnewtestblock":
-  	  logger.info("getNewTestBlock");
+  	  logger.info("Processing getNewTestBlock");
   	  HanaBlockItem blockItem = HanaItems.makeTestHanaBlockItem(); 
   	  logger.info("Test Block Item = " + gson.toJson(blockItem));
-  	  clientResponse.setResultMsg("success");
-  	  clientResponse.setResult(gson.toJson(blockItem));    	
+  	  clientResponse.setStatus("success");
+  	  clientResponse.setResultType("HanaBlockInfo");
+  	  clientResponse.setResult(blockItem); 
     	break;
     case "newFault":
+    	logger.info("Processing newFault");
     	String signatureList = jobj.get("signatureList").toString();
-    	//TODO - BlockRPSAccess
-    	List<String> faultTransactions = AbstractAPIAdapter.getInstance().newFaultNotification(signatureList);
+    	logger.info ("signatures received : " + signatureList);
+    	//TODO - BlockRPCAccess
+    	List<String> faultTransactions = null; //AbstractAPIAdapter.getInstance().newFaultNotification(signatureList);
     	if (faultTransactions == null) {
-    		clientResponse.setResultMsg("failure-newFault request failed");
+    		clientResponse.setStatus("failure-newFault request failed");
     	} else {
-    		clientResponse.setResultMsg("success");
+    		clientResponse.setStatus("success");
+    		clientResponse.setResultType("FaultTransactions");
     		clientResponse.setResult(gson.toJson(faultTransactions));
     	}    	 	
     	break;
     default:
-    	clientResponse.setResultMsg(apiCommand + " failed. Command not specified or not implemented.");
+    	logger.info("Processing default. Not expected behavior. Please check for command sent to server.");
+    	clientResponse.setStatus(apiCommand + " failed. Command not specified or not implemented.");
     	break;
     }
     

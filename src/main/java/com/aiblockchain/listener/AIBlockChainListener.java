@@ -27,6 +27,9 @@ public class AIBlockChainListener implements HanaListener {
   private AbstractAPIAdapter apiAdapter;
   // the current channel recorded from the received message handler so we can initiate outbound messages here to the API client
   private AtomicReference<Channel> atomicChannel = new AtomicReference<Channel>();
+  //local websocket server testing
+  private String SERVER_HOST = "localhost";
+  //private String SERVER_HOST = null;
 
   /**
    * Constructs a new AIBlockChainListener instance.
@@ -51,7 +54,8 @@ public class AIBlockChainListener implements HanaListener {
    * Adds this HANA 2 demonstration listener.
    */
   public void addHanaListener() {
-    apiAdapter.addHanaListener(this);
+	  if (SERVER_HOST == null)
+		  apiAdapter.addHanaListener(this);
   }
 
   /**

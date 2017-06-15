@@ -7,9 +7,10 @@
 #echo "Args $#"
 if [ $# -gt 0 ]
 then
-  echo "Running secured webscoclets..."
+  echo "Running secured websockets..."
   java -Dlog4j.debug -Dlog4j.configuration=./src/main/resources/log4j.properties -jar target/aiblockchain-websocket-secured-websocket.jar 20443 $@
 else
-  echo "Running non secured webscoclets..."
-  java -Dlog4j.debug -Dlog4j.configuration=./src/main/resources/log4j.properties -jar target/aiblockchain-websocket-non-secured-websocket.jar 20000 $@
+  echo "Running non secured websockets..."
+  #java -Dlog4j.debug -Dlog4j.configuration=./src/main/resources/log4j.properties -jar target/aiblockchain-websocket-non-secured-websocket.jar 20000 $@
+  java -Dlog4j.debug -Dlog4j.configuration=log4j.properties -jar target/aiblockchain-websocket-non-secured-websocket.jar 20000 $@
 fi
