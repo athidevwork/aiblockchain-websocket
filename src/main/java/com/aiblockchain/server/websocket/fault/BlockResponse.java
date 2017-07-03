@@ -1,11 +1,11 @@
-package com.aiblockchain.server.websocket.blockticker;
+package com.aiblockchain.server.websocket.fault;
 
 import java.util.Map;
 
 /**
- * Created by jwb on 3/13/15.
+ * User : Athi.
  */
-public class TickerResponse {
+public class BlockResponse {
    private String result;
    private Map<String,String> tickerData;
 
@@ -30,7 +30,7 @@ public class TickerResponse {
       if (this == o) { return true; }
       if (o == null || getClass() != o.getClass()) { return false; }
 
-      TickerResponse that = (TickerResponse) o;
+      BlockResponse that = (BlockResponse) o;
 
       if (result != null ? !result.equals(that.result) : that.result != null) { return false; }
       if (tickerData != null ? !tickerData.equals(that.tickerData) : that.tickerData != null) { return false; }

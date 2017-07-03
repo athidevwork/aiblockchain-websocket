@@ -1,23 +1,24 @@
 /**
  * 
  */
-package com.aiblockchain.server.websocket.blockticker;
+package com.aiblockchain.server.websocket.fault;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * @author Athi
  *
  */
-public class FaultResponse {
+public class FaultResponse implements Serializable {
 	   private String result;
-	   private Map<String,String> faultData;
+	   private Map<String, Serializable> faultData;
 
 	   public String getResult() {
 	      return result;
 	   }
 
-	   public Map<String,String> getTickerData() {
+	   public Map<String, Serializable> getFaultData() {
 	      return faultData;
 	   }
 
@@ -25,8 +26,8 @@ public class FaultResponse {
 	      this.result = command;
 	   }
 
-	   public void setTickerData(Map<String,String> tickerData) {
-	      this.faultData = tickerData;
+	   public void setFaultData(Map<String, Serializable> faultData) {
+	      this.faultData = faultData;
 	   }
 
 	   @Override
@@ -51,9 +52,9 @@ public class FaultResponse {
 
 	   @Override
 	   public String toString() {
-	      return "TickerResponse{"  +
+	      return "FaultResponse{"  +
 	              "result='"      + result + '\'' +
-	            ", tickerData='" + faultData + '\'' +
+	            ", faultData='" + faultData + '\'' +
 	            '}';
 	   }
 }

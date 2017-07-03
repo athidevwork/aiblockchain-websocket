@@ -1,47 +1,46 @@
-package com.aiblockchain.server.websocket.blockticker;
+package com.aiblockchain.server.websocket.fault;
 
 /**
- * User : Athi.
+ * Created by jwb on 3/13/15.
  */
-public class BlockRequest {
+public class TickerRequest {
    private int blockNumber;
-   private int numberOfBlocks;
    private String command;
+   private String tickerSymbol;
 
    public String getCommand() {
       return command;
    }
 
-   public void setCommand(String command) {
-	      this.command = command;
-	   }
-   
+   public String getTickerSymbol() {
+      return tickerSymbol;
+   }
+
    public int getBlockNumber() {
       return blockNumber;
+   }
+   
+   public void setCommand(String command) {
+      this.command = command;
+   }
+
+   public void setTickerSymbol(String tickerSymbol) {
+      this.tickerSymbol = tickerSymbol;
    }
 
    public void setBlockNumber(int blockNumber) {
       this.blockNumber = blockNumber;
    }
    
-   public int getNumberOfBlocks() {
-	return numberOfBlocks;
-}
-
-public void setNumberOfBlocks(int numberOfBlocks) {
-	this.numberOfBlocks = numberOfBlocks;
-}
-
-
-@Override
+   @Override
    public boolean equals(Object o) {
       if (this == o) { return true; }
       if (o == null || getClass() != o.getClass()) { return false; }
 
-      BlockRequest that = (BlockRequest) o;
+      TickerRequest that = (TickerRequest) o;
 
       if (command != null ? !command.equals(that.command) : that.command != null) { return false; }
-      if (numberOfBlocks != 0 ? !(numberOfBlocks==that.numberOfBlocks) : that.numberOfBlocks != 0) { return false; }
+      if (tickerSymbol != null ? !tickerSymbol.equals(that.tickerSymbol) : that.tickerSymbol != null) { return false; }
       if (blockNumber != 0 ? !(blockNumber==that.blockNumber) : that.blockNumber != 0) { return false; }
       
       return true;
@@ -50,7 +49,7 @@ public void setNumberOfBlocks(int numberOfBlocks) {
    @Override
    public int hashCode() {
       int result = command != null ? command.hashCode() : 0;
-      result = 31 * result + (numberOfBlocks != 0 ? numberOfBlocks : 0);
+      result = 31 * result + (tickerSymbol != null ? tickerSymbol.hashCode() : 0);
       result = 31 * result + (blockNumber != 0 ? blockNumber : 0);
       return result;
    }
@@ -59,9 +58,8 @@ public void setNumberOfBlocks(int numberOfBlocks) {
    public String toString() {
       return "TickerRequest{"  +
               "command='"      + command + '\'' +
-             ", blockNumber='" + blockNumber + '\'' +              
-            ", numberOfBlocks='" + numberOfBlocks + '\'' +
+            ", tickerSymbol='" + tickerSymbol + '\'' +
+             ", blockNumber='" + blockNumber + '\'' +
             '}';
    }
-
 }

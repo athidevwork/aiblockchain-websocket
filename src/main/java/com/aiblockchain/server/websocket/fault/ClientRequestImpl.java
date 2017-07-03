@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.aiblockchain.server.websocket.blockticker;
+package com.aiblockchain.server.websocket.fault;
 
 /**
  * @author Athi

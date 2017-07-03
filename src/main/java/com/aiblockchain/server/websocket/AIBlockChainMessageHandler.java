@@ -8,10 +8,10 @@ import com.aiblockchain.client.AbstractAPIAdapter;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import com.aiblockchain.server.StringUtils;
-import com.aiblockchain.server.websocket.blockticker.BlockRequest;
-import com.aiblockchain.server.websocket.blockticker.BlockResponse;
-import com.aiblockchain.server.websocket.blockticker.ClientResponse;
-import com.aiblockchain.server.websocket.blockticker.ClientResponseImpl;
+import com.aiblockchain.server.websocket.fault.BlockRequest;
+import com.aiblockchain.server.websocket.fault.BlockResponse;
+import com.aiblockchain.server.websocket.fault.ClientResponse;
+import com.aiblockchain.server.websocket.fault.ClientResponseImpl;
 import com.google.gson.Gson;
 
 import io.netty.channel.ChannelHandlerContext;
