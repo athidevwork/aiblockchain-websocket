@@ -29,6 +29,5 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new WebSocketServerCompressionHandler());
         pipeline.addLast("AIBChandler", new AIBlockChainServerHandler());  
         pipeline.addLast("AIBCOutboundhandler", new AIBlockChainServerOutboundHandler());
-        //pipeline.addLast("handler", new BlockTickerServerHandler());
     }
 }

@@ -3,6 +3,8 @@ package com.aiblockchain.client;
 import com.aiblockchain.listener.AIBlockChainListener;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
+import com.aiblockchain.server.websocket.fault.FaultRequest;
+import com.aiblockchain.server.websocket.fault.FaultResponse;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -101,6 +103,11 @@ public class AIBlockChainListenerTest {
     @Override
     protected Logger getLogger() {
       return LOGGER;
+    }
+
+    @Override
+    public FaultResponse updateFault(FaultRequest faultRequest) {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
   }

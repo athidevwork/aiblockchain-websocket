@@ -2,6 +2,8 @@ package com.aiblockchain.client;
 
 import com.aiblockchain.listener.HanaListener;
 import com.aiblockchain.model.hana.HanaItems;
+import com.aiblockchain.server.websocket.fault.FaultRequest;
+import com.aiblockchain.server.websocket.fault.FaultResponse;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.log4j.Logger;
@@ -35,6 +37,14 @@ public abstract class AbstractAPIAdapter {
   public static AbstractAPIAdapter getInstance() {
     return apiAdapter;
   }
+  
+  /**
+   * Adds the given fault signatures to the blockchain.
+   *
+   * @param faultRequest the fault request, which contains the fault signatures
+   * @return
+   */
+  public abstract FaultResponse updateFault(final FaultRequest faultRequest);
   
   /** Adds a HANA 2 demonstration listener.
    * 
