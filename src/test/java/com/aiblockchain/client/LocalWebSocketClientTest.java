@@ -237,7 +237,7 @@ public class LocalWebSocketClientTest {
 				    }
 				};
 
-				timer.schedule(myTask, 5000, 5000);
+				timer.schedule(myTask, 10000, 10000);
 				/*Object lock = new Object();
 				synchronized (lock) {
 					while (true) {

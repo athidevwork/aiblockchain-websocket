@@ -12,10 +12,14 @@ import com.aiblockchain.server.websocket.fault.BlockRequest;
 import com.aiblockchain.server.websocket.fault.BlockResponse;
 import com.aiblockchain.server.websocket.fault.ClientResponse;
 import com.aiblockchain.server.websocket.fault.ClientResponseImpl;
+import com.aiblockchain.server.websocket.fault.FaultRequest;
+import com.aiblockchain.server.websocket.fault.FaultResponse;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import io.netty.channel.ChannelHandlerContext;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -80,14 +84,17 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
     	logger.info("Processing newFault");
     	String signatureList = jobj.get("signatureList").toString();
     	logger.info ("signatures received : " + signatureList);
-    	//TODO - BlockRPCAccess
-    	List<String> faultTransactions = null; //AbstractAPIAdapter.getInstance().newFaultNotification(signatureList);
+    	Type listType = 
+    		     new TypeToken<List<String>>(){}.getType();
+    	List<String> faultTransactions = new Gson().fromJson(signatureList, listType);
+    	FaultRequest faultRequest = new FaultRequest("newFault", faultTransactions);
+    	FaultResponse faultResponse = AbstractAPIAdapter.getInstance().updateFault(faultRequest);
     	if (faultTransactions == null) {
     		clientResponse.setStatus("failure-newFault request failed");
     	} else {
     		clientResponse.setStatus("success");
-    		clientResponse.setResultType("FaultTransactions");
-    		clientResponse.setResult(gson.toJson(faultTransactions));
+    		clientResponse.setResultType("FaultResponse");
+    		clientResponse.setResult(gson.toJson(faultResponse));
     	}    	 	
     	break;
     default:
@@ -97,6 +104,7 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
     }
     
     String response = gson.toJson(clientResponse);
+    logger.info("handle message reponse = " + response);
     return response;
     
     /*BlockResponse blockResponse = new BlockResponse();
