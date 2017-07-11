@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -49,6 +50,7 @@ public class LocalWebSocketClientTest {
   public static void main(String[] args) {
 		String url = null;
 		int noOfParams = args.length;
+		LocalDateTime startTime = null;
 
 		if (noOfParams > 1) {
 			LOGGER.info("Main() Args : " + noOfParams + ", host : " + args[0] + ", port : " + args[1]);
@@ -66,9 +68,9 @@ public class LocalWebSocketClientTest {
 		try {
 			final WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(new URI(url));
 			
-			clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
-				public void handleMessage(String message) {					
-					//LOGGER.debug(message);
+			clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {	
+				public void handleMessage(String message) {
+					LOGGER.debug("handleMessage() in client:" + message);
 					JSONObject jsonObj = new JSONObject(message);
 
 					if (jsonObj.has("hanaObjectType")) {
@@ -112,83 +114,47 @@ public class LocalWebSocketClientTest {
 						}	
 					}
 					else { 
-						if (jsonObj.has("status")) {
-							String status = jsonObj.getString("status");
-							if (status.equalsIgnoreCase("success")) {
-								JSONObject resultObj = jsonObj.getJSONObject("result");
-								JSONObject hanaBlockInfo = (JSONObject) resultObj.get("hanaBlockInfo");
-								LOGGER.info("Block = " + hanaBlockInfo);								
-							}
-							else
-								LOGGER.info("result status : " + status);
-						}
-						/*if (jsonObj.has("result")) {
-							String resultString = (String) jsonObj.get("result");
-							LOGGER.info("result: " + resultString);
-							if (resultString.startsWith("{\"hanaBlockItems\":")) {
-								final HanaItems hanaItems = gson.fromJson(resultString, HanaItems.class);
-								LOGGER.info("hanaItems: " + hanaItems);
-								LOGGER.info("");
-								LOGGER.info("hanaBlockItems...");
-								for (final HanaItems.HanaBlockItem hanaBlockItem : hanaItems.getHanaBlockItems()) {
-									final Object[] isValid = HanaItems.isHanaBlockItemValid(hanaBlockItem);
-									if (!(boolean) isValid[0]) {
-										LOGGER.error("************************************************");
-										LOGGER.error("hanaBlockItem failed internal consistency checks for reason " + isValid[1]);
-										LOGGER.error("************************************************");
-									}
-									LOGGER.info("  " + hanaBlockItem);
-									LOGGER.info("");
-									LOGGER.info("  hanaTransactionItems...");
-									for (final HanaItems.HanaTransactionItem hanaTransactionItem : hanaBlockItem.getHanaTransactionItems()) {
-										LOGGER.info("    " + hanaTransactionItem);
-										LOGGER.info("");
-										LOGGER.info("    hanaTransactionInputInfos...");
-										for (final HanaTransactionInputInfo hanaTransactionInputInfo : hanaTransactionItem.getHanaTransactionInputInfos()) {
-											LOGGER.info("      " + hanaTransactionInputInfo);
-											LOGGER.info("");
-										}
-										LOGGER.info("    hanaTransactionOutputInfos...");
-										for (final HanaTransactionOutputInfo hanaTransactionOutputInfo : hanaTransactionItem.getHanaTransactionOutputInfos()) {
-											LOGGER.info("      " + hanaTransactionOutputInfo);
-											LOGGER.info("");
-										}
-									}
+						LOGGER.debug("jsonObj : " + jsonObj);
+						if (jsonObj.has("resultType")) {
+							String resultType = jsonObj.getString("resultType");
+							switch (resultType) {
+							case "HanaItems":
+								/*JSONObject resultObj = (JSONObject) jsonObj.getJSONObject("result");
+								if (resultObj.has("hanaBlockItems")) {								
+									JSONObject hanaBlockItems = resultObj.getJSONObject("hanaBlockItems");
+									LOGGER.info("BlockItem = " + hanaBlockItems);
 								}
-							} 
-							else {
-								LOGGER.error("unexpected server result " + resultString);
-							}
-							LOGGER.info(jsonObj);
-							String result = jsonObj.getString("result");
-
-							HanaItems hanaItems = gson.fromJson(result, HanaItems.class);
-
-							List<HanaBlockItem> blockItemsList = util.getBlockItems(hanaItems);
-							for (HanaBlockItem item : blockItemsList) {
-								HanaBlockItem blockItem = util.getBlockItem(gson, item);                     	    
-								util.getTransactionItems(gson, blockItem);
-							}
-						}*/
-						else if (jsonObj.has("hanaTransactionItems")) {
-							LOGGER.info(jsonObj);
-							JSONArray jsonArray = jsonObj.getJSONArray("hanaTransactionItems");
-
-							if (jsonArray.length() > 0) {
-								for (int i = 0; i < jsonArray.length(); i++) {
-									JSONObject jsonObject = jsonArray.getJSONObject(i);
-									String json2Str = jsonObject.toString();                    	        	
-									HanaTransactionItem transactionItem = gson.fromJson(json2Str, HanaTransactionItem.class);
-									util.getHanaTransactionItem(gson, util, transactionItem); 
+								else*/
+									LOGGER.info("hanaBlockItems: " + jsonObj);
+								break;
+							case "HanaBlockInfo":
+								JSONObject resultObj1 = jsonObj.getJSONObject("result");
+								if (resultObj1.has("hanaBlockInfo")) {
+									JSONObject hanaBlockInfo = (JSONObject) resultObj1.get("hanaBlockInfo");
+									LOGGER.info("Block = " + hanaBlockInfo);
 								}
+								break;
+							case "FaultResponse":
+								if (jsonObj.has("faultData")) {
+									JSONObject faultData = (JSONObject) jsonObj.get("faultData");
+							    	JSONArray txnArr = faultData.getJSONArray("txids");  
+									List<String> faultTxns = new ArrayList<String>();
+							    	for(int i = 0; i < txnArr.length(); i++){
+							    		faultTxns.add(txnArr.getString(i));
+							    	}
+							    	LOGGER.debug("Txn Id's from Blockchain : " + faultTxns);
+								}
+								else
+									LOGGER.info("Fault Response " + jsonObj);
+								break;
 							}
 						}
 						else
 							LOGGER.info(jsonObj);
 					}
-					LOGGER.info("**************************************************************************************");
 					LocalDateTime currentTime = LocalDateTime.now();
 					LOGGER.info("Transaction " + transactionCount++ + ", Current DateTime: " + currentTime);
+					LOGGER.info("**************************************************************************************");					
 				}
 			});
 
@@ -205,7 +171,7 @@ public class LocalWebSocketClientTest {
 				    @Override
 				    public void run() {
 				    	// whatever you need to do every 5 seconds
-				    	String [] arr = {"newFault", "getnewtestblock"};
+				    	String [] arr = {"add", "getnewblock", "getnewtestblock", "add"};
 				    	Random random = new Random();
 				    	// randomly selects an index from the arr
 				    	int select = random.nextInt(arr.length); 
@@ -214,23 +180,23 @@ public class LocalWebSocketClientTest {
 				    	LOGGER.info("Random String selected: " + selectedCommand); 
 				    	String newMessage = null;
 				    	switch (selectedCommand) {
+				    	case "getnewblock":	
 				    	case "getnewtestblock":				    	
 				    		newMessage = "{\"command\":\"" + selectedCommand + "\", \"blockNumber\":\"1\", \"numberOfBlocks\":\"2\"}";	    		
 				    		break;
-				    	case "newFault":
-				    		//String message;
-				    		JSONObject json = new JSONObject();
-				    		json.put("command", selectedCommand);
-				    		//JSONObject signatureObj = new JSONObject();
-				    		JSONArray signatureObj = new JSONArray();
-				    		signatureObj.put("value1");
-				    		signatureObj.put("value2");
-				    		signatureObj.put("value3");
-				    		json.put("signatureList", signatureObj);
-				    		newMessage = json.toString();
-				    		//LOGGER.info("newMessage : " + newMessage);
-				    		//newMessage = "{\"command\":\"" + selectedCommand + "\", \"signatureList\":\"2\"}";
-				    		break;
+				    	case "add":
+				    		JSONObject faultRequest = new JSONObject();
+				    		faultRequest.put("command", selectedCommand);
+				    		JSONObject faultDataJO = new JSONObject();
+				    		
+				    		JSONArray txnIds = new JSONArray();
+				    		txnIds.put("value1");
+				    		txnIds.put("value2");
+				    		txnIds.put("value3");
+				    		faultDataJO.put("txnids", txnIds);
+				    		faultRequest.put("faultData", faultDataJO);
+				    		newMessage = faultRequest.toString();
+				    		break;				    		
 				    	}
 				    	LOGGER.info("sending request: " + newMessage);
 				    	clientEndPoint.sendMessage(newMessage);

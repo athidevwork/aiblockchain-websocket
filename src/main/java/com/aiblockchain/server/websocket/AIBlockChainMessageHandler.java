@@ -20,9 +20,11 @@ import com.google.gson.reflect.TypeToken;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -69,6 +71,7 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
 		} else {
 			clientResponse.setStatus("success");
 			clientResponse.setResultType("HanaItems");
+			System.out.println("Block response from server = " + gson.toJson(hanaItems));
 			clientResponse.setResult(gson.toJson(hanaItems));
 		}        
     	break;
@@ -80,20 +83,30 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
   	  clientResponse.setResultType("HanaBlockInfo");
   	  clientResponse.setResult(blockItem); 
     	break;
-    case "newFault":
-    	logger.info("Processing newFault");
-    	String signatureList = jobj.get("signatureList").toString();
-    	logger.info ("signatures received : " + signatureList);
-    	Type listType = 
+    case "add":
+    	System.out.println("Processing add Fault");
+    	JSONObject faultData = jobj.getJSONObject("faultData");
+    	JSONArray txnArr = faultData.getJSONArray("txnids");    	
+    	List<String> faultTxns = new ArrayList<String>();
+    	for(int i = 0; i < txnArr.length(); i++){
+    		faultTxns.add(txnArr.getString(i));
+    	}
+    	
+    	System.out.println ("fault txns received : " + faultTxns);
+    	/*Type listType = 
     		     new TypeToken<List<String>>(){}.getType();
-    	List<String> faultTransactions = new Gson().fromJson(signatureList, listType);
-    	FaultRequest faultRequest = new FaultRequest("newFault", faultTransactions);
-    	FaultResponse faultResponse = AbstractAPIAdapter.getInstance().updateFault(faultRequest);
-    	if (faultTransactions == null) {
-    		clientResponse.setStatus("failure-newFault request failed");
+    	List<String> faultTransactions = new Gson().fromJson(faultTxns, listType);*/
+    	FaultRequest faultRequest = null;
+    	FaultResponse faultResponse = null;
+    	if (faultTxns.size() == 0) {
+    		clientResponse.setStatus("failure-"+apiCommand+" request failed. No transactions to be sent to server");
     	} else {
+        	faultRequest = new FaultRequest("add", faultTxns);
+        	faultResponse = AbstractAPIAdapter.getInstance().updateFault(faultRequest);
     		clientResponse.setStatus("success");
     		clientResponse.setResultType("FaultResponse");
+    		logger.info("Fault response from server = " + gson.toJson(faultResponse));
+    		System.out.println("Fault response from server = " + gson.toJson(faultResponse));
     		clientResponse.setResult(gson.toJson(faultResponse));
     	}    	 	
     	break;
