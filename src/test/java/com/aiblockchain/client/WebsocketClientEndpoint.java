@@ -28,9 +28,9 @@ public class WebsocketClientEndpoint {
     public WebsocketClientEndpoint(URI endpointURI) {
         try {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            LOGGER.error("check websocket endpoint - probably invalid URI");
             container.connectToServer(this, endpointURI);
         } catch (Exception e) {
+            LOGGER.error("check websocket endpoint - probably invalid URI");
             throw new RuntimeException(e);
         }
     }
