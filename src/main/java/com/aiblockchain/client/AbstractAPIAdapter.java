@@ -2,6 +2,8 @@ package com.aiblockchain.client;
 
 import com.aiblockchain.listener.HanaListener;
 import com.aiblockchain.model.hana.HanaItems;
+import com.aiblockchain.server.websocket.fault.DiamondRequest;
+import com.aiblockchain.server.websocket.fault.DiamondResponse;
 import com.aiblockchain.server.websocket.fault.FaultRequest;
 import com.aiblockchain.server.websocket.fault.FaultResponse;
 import java.util.HashSet;
@@ -83,4 +85,6 @@ public abstract class AbstractAPIAdapter {
    * @return the logger
    */
   abstract protected Logger getLogger();
+
+  public abstract DiamondResponse saveDiamond(DiamondRequest diamondRequest);
 }

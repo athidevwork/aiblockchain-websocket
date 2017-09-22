@@ -3,6 +3,8 @@ package com.aiblockchain.client;
 import com.aiblockchain.listener.AIBlockChainListener;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
+import com.aiblockchain.server.websocket.fault.DiamondRequest;
+import com.aiblockchain.server.websocket.fault.DiamondResponse;
 import com.aiblockchain.server.websocket.fault.FaultRequest;
 import com.aiblockchain.server.websocket.fault.FaultResponse;
 import java.util.ArrayList;
@@ -109,6 +111,11 @@ public class AIBlockChainListenerTest {
     public FaultResponse updateFault(FaultRequest faultRequest) {
       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+	@Override
+	public DiamondResponse saveDiamond(DiamondRequest diamondRequest) {
+	      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 
   }
 

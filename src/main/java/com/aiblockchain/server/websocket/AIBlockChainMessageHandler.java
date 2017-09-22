@@ -12,6 +12,8 @@ import com.aiblockchain.server.websocket.fault.BlockRequest;
 import com.aiblockchain.server.websocket.fault.BlockResponse;
 import com.aiblockchain.server.websocket.fault.ClientResponse;
 import com.aiblockchain.server.websocket.fault.ClientResponseImpl;
+import com.aiblockchain.server.websocket.fault.DiamondRequest;
+import com.aiblockchain.server.websocket.fault.DiamondResponse;
 import com.aiblockchain.server.websocket.fault.FaultRequest;
 import com.aiblockchain.server.websocket.fault.FaultResponse;
 import com.google.gson.Gson;
@@ -83,25 +85,25 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
   	  clientResponse.setResultType("HanaBlockInfo");
   	  clientResponse.setResult(blockItem); 
     	break;
-    case "add":
+    case "addFault":
     	System.out.println("Processing add Fault");
     	JSONObject faultData = jobj.getJSONObject("faultData");
-    	JSONArray txnArr = faultData.getJSONArray("txnids");    	
-    	List<String> faultTxns = new ArrayList<String>();
+    	JSONArray txnArr = faultData.getJSONArray("faultIds");    	
+    	List<String> faultIds = new ArrayList<String>();
     	for(int i = 0; i < txnArr.length(); i++){
-    		faultTxns.add(txnArr.getString(i));
+    		faultIds.add(txnArr.getString(i));
     	}
     	
-    	System.out.println ("fault txns received : " + faultTxns);
+    	System.out.println ("fault ids received : " + faultIds);
     	/*Type listType = 
     		     new TypeToken<List<String>>(){}.getType();
     	List<String> faultTransactions = new Gson().fromJson(faultTxns, listType);*/
     	FaultRequest faultRequest = null;
     	FaultResponse faultResponse = null;
-    	if (faultTxns.size() == 0) {
+    	if (faultIds.size() == 0) {
     		clientResponse.setStatus("failure-"+apiCommand+" request failed. No transactions to be sent to server");
     	} else {
-        	faultRequest = new FaultRequest("add", faultTxns);
+        	faultRequest = new FaultRequest("addFault", faultIds);
         	faultResponse = AbstractAPIAdapter.getInstance().updateFault(faultRequest);
     		clientResponse.setStatus("success");
     		clientResponse.setResultType("FaultResponse");
@@ -110,6 +112,30 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
     		clientResponse.setResult(gson.toJson(faultResponse));
     	}    	 	
     	break;
+    case "saveDiamond":
+    	System.out.println("Processing save Diamond");
+    	JSONObject diamondData = jobj.getJSONObject("diamondData");
+    	JSONArray diamondArr = diamondData.getJSONArray("diamondIds");    	
+    	List<String> diamondIds = new ArrayList<String>();
+    	for(int i = 0; i < diamondArr.length(); i++){
+    		diamondIds.add(diamondArr.getString(i));
+    	}
+    	
+    	System.out.println ("diamond ids received : " + diamondIds);
+    	DiamondRequest diamondRequest = null;
+    	DiamondResponse diamondResponse = null;
+    	if (diamondIds.size() == 0) {
+    		clientResponse.setStatus("failure-"+apiCommand+" request failed. No transactions to be sent to server");
+    	} else {
+        	diamondRequest = new DiamondRequest("saveDiamond", diamondIds);
+        	diamondResponse = AbstractAPIAdapter.getInstance().saveDiamond(diamondRequest);
+    		clientResponse.setStatus("success");
+    		clientResponse.setResultType("DiamondResponse");
+    		logger.info("Diamond response from server = " + gson.toJson(diamondResponse));
+    		System.out.println("Diamond response from server = " + gson.toJson(diamondResponse));
+    		clientResponse.setResult(gson.toJson(diamondResponse));
+    	}    	 	
+    	break;    	
     default:
     	logger.info("Processing default. Not expected behavior. Please check for command sent to server.");
     	clientResponse.setStatus(apiCommand + " failed. Command not specified or not implemented.");

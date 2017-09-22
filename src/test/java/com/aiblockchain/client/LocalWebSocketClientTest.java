@@ -147,6 +147,19 @@ public class LocalWebSocketClientTest {
 								else
 									LOGGER.info("Fault Response " + jsonObj);
 								break;
+							case "DiamondResponse":
+								if (jsonObj.has("diamondData")) {
+									JSONObject diamondData = (JSONObject) jsonObj.get("diamondData");
+							    	JSONArray diamondArr = diamondData.getJSONArray("diamondids");  
+									List<String> diamondIds = new ArrayList<String>();
+							    	for(int i = 0; i < diamondArr.length(); i++){
+							    		diamondIds.add(diamondArr.getString(i));
+							    	}
+							    	LOGGER.debug("Diamond Id's from Blockchain : " + diamondIds);
+								}
+								else
+									LOGGER.info("Diamond Response " + jsonObj);
+								break;								
 							}
 						}
 						else
@@ -171,7 +184,7 @@ public class LocalWebSocketClientTest {
 				    @Override
 				    public void run() {
 				    	// whatever you need to do every 5 seconds
-				    	String [] arr = {"add", "getnewblock", "getnewtestblock", "add"};
+				    	String [] arr = {"addFault", "getnewblock", "getnewtestblock", "saveDiamond"};
 				    	Random random = new Random();
 				    	// randomly selects an index from the arr
 				    	int select = random.nextInt(arr.length); 
@@ -184,18 +197,30 @@ public class LocalWebSocketClientTest {
 				    	case "getnewtestblock":				    	
 				    		newMessage = "{\"command\":\"" + selectedCommand + "\", \"blockNumber\":\"1\", \"numberOfBlocks\":\"2\"}";	    		
 				    		break;
-				    	case "add":
+				    	case "addFault":
 				    		JSONObject faultRequest = new JSONObject();
 				    		faultRequest.put("command", selectedCommand);
 				    		JSONObject faultDataJO = new JSONObject();
 				    		
-				    		JSONArray txnIds = new JSONArray();
-				    		txnIds.put("value1");
-				    		txnIds.put("value2");
-				    		txnIds.put("value3");
-				    		faultDataJO.put("txnids", txnIds);
+				    		JSONArray faultIds = new JSONArray();
+				    		faultIds.put("value1");
+				    		faultIds.put("value2");
+				    		faultIds.put("value3");
+				    		faultDataJO.put("faultIds", faultIds);
 				    		faultRequest.put("faultData", faultDataJO);
 				    		newMessage = faultRequest.toString();
+				    		break;	
+				    	case "saveDiamond":
+				    		JSONObject saveDiamondRequest = new JSONObject();
+				    		saveDiamondRequest.put("command", selectedCommand);
+				    		JSONObject saveDiamondJO = new JSONObject();
+				    		
+				    		JSONArray saveDiamondId = new JSONArray();
+				    		saveDiamondId.put("value1");
+				    		saveDiamondId.put("value2");
+				    		saveDiamondJO.put("diamondIds", saveDiamondId);
+				    		saveDiamondRequest.put("diamondData", saveDiamondJO);
+				    		newMessage = saveDiamondRequest.toString();
 				    		break;				    		
 				    	}
 				    	LOGGER.info("sending request: " + newMessage);
