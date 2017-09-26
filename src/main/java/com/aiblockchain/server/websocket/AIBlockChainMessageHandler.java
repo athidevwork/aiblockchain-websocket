@@ -11,11 +11,12 @@ import com.aiblockchain.server.StringUtils;
 import com.aiblockchain.server.websocket.fault.BlockRequest;
 import com.aiblockchain.server.websocket.fault.BlockResponse;
 import com.aiblockchain.server.websocket.fault.ClientResponse;
-import com.aiblockchain.server.websocket.fault.ClientResponseImpl;
+import com.aiblockchain.server.websocket.fault.ClientResponse;
 import com.aiblockchain.server.websocket.fault.DiamondRequest;
 import com.aiblockchain.server.websocket.fault.DiamondResponse;
 import com.aiblockchain.server.websocket.fault.FaultRequest;
-import com.aiblockchain.server.websocket.fault.FaultResponse;
+import com.aiblockchain.server.websocket.fault.FaultData;
+import com.aiblockchain.server.websocket.fault.ResponseData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -58,7 +59,9 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
     logger.info("Json = " + jobj.toString());
     String apiCommand = jobj.get("command").toString();
     
-    ClientResponse clientResponse = new ClientResponseImpl();
+    ClientResponse clientResponse = new ClientResponse();
+	ResponseData respData = new ResponseData(); 
+	String serverResult = null;
     switch (apiCommand) {
     case "getnewblock":
     	logger.info("Processing getnewblock");
@@ -69,21 +72,26 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
 		HanaItems hanaItems = AbstractAPIAdapter.getInstance().getBlocksStartingWith(
 								blockNumber, numberOfBlocks);
 		if (hanaItems == null) {
-			clientResponse.setStatus("failure-getnewblock request failed");
+			respData.setStatus("failure-getnewblock request failed");
 		} else {
-			clientResponse.setStatus("success");
-			clientResponse.setResultType("HanaItems");
+			respData.setStatus("success");
+	       	respData.setResult(hanaItems);
+			clientResponse.setResultType("HanaItems");	       	
+	    	clientResponse.setResponseData(respData);
+	    		
 			System.out.println("Block response from server = " + gson.toJson(hanaItems));
-			clientResponse.setResult(gson.toJson(hanaItems));
+			//clientResponse.setResult(gson.toJson(hanaItems));
 		}        
     	break;
     case "getnewtestblock":
   	  logger.info("Processing getNewTestBlock");
   	  HanaBlockItem blockItem = HanaItems.makeTestHanaBlockItem(); 
-  	  logger.info("Test Block Item = " + gson.toJson(blockItem));
-  	  clientResponse.setStatus("success");
-  	  clientResponse.setResultType("HanaBlockInfo");
-  	  clientResponse.setResult(blockItem); 
+		respData.setStatus("success");
+       	respData.setResult(blockItem);
+		clientResponse.setResultType("HanaBlockInfo");	       	
+    	clientResponse.setResponseData(respData); 
+    	
+    	System.out.println ("Test Block Item = " + gson.toJson(blockItem));    	
     	break;
     case "addFault":
     	System.out.println("Processing add Fault");
@@ -98,18 +106,22 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
     	/*Type listType = 
     		     new TypeToken<List<String>>(){}.getType();
     	List<String> faultTransactions = new Gson().fromJson(faultTxns, listType);*/
-    	FaultRequest faultRequest = null;
-    	FaultResponse faultResponse = null;
+
     	if (faultIds.size() == 0) {
-    		clientResponse.setStatus("failure-"+apiCommand+" request failed. No transactions to be sent to server");
+    		//respData.setStatus("failure-"+apiCommand+" request failed. No transactions to be sent to server");
+        	respData.setStatus("failure");
+        	respData.setResult(null);
+    		clientResponse.setResultType(apiCommand + " request failed. No transactions to be sent to server.");
+    		clientResponse.setResponseData(null);
     	} else {
-        	faultRequest = new FaultRequest("addFault", faultIds);
-        	faultResponse = AbstractAPIAdapter.getInstance().updateFault(faultRequest);
-    		clientResponse.setStatus("success");
+    		FaultRequest faultRequest = new FaultRequest("addFault", faultIds);
+        	serverResult = AbstractAPIAdapter.getInstance().updateFault(faultRequest);
+        	//serverResult = "[[\"value1\",\"value2\",\"value3\"],[\"06012c65c2ce2237d4ab00570b337b453af45bbf490ed908fc64cded99331ef3\",\"cc903acb3dcb96b067b1a482cb60df65c3767eace43f15b6348fae909fa990bd\",\"ad7738df1b07ff06918a8d7fb02229a9ec98949a2288fa49763eba161658d017\"]]";
+        	respData.setStatus("success");
+        	respData.setResult(serverResult);
     		clientResponse.setResultType("FaultResponse");
-    		logger.info("Fault response from server = " + gson.toJson(faultResponse));
-    		System.out.println("Fault response from server = " + gson.toJson(faultResponse));
-    		clientResponse.setResult(gson.toJson(faultResponse));
+    		clientResponse.setResponseData(respData);
+    		System.out.println("Fault response from server = " + gson.toJson(clientResponse));
     	}    	 	
     	break;
     case "saveDiamond":
@@ -122,60 +134,34 @@ public class AIBlockChainMessageHandler implements WebSocketMessageHandler {
     	}
     	
     	System.out.println ("diamond ids received : " + diamondIds);
-    	DiamondRequest diamondRequest = null;
-    	DiamondResponse diamondResponse = null;
     	if (diamondIds.size() == 0) {
-    		clientResponse.setStatus("failure-"+apiCommand+" request failed. No transactions to be sent to server");
+        	respData.setStatus("failure");
+        	respData.setResult(null);
+    		clientResponse.setResultType(apiCommand + " request failed. No transactions to be sent to server.");
+    		clientResponse.setResponseData(null);
     	} else {
-        	diamondRequest = new DiamondRequest("saveDiamond", diamondIds);
-        	diamondResponse = AbstractAPIAdapter.getInstance().saveDiamond(diamondRequest);
-    		clientResponse.setStatus("success");
+    		DiamondRequest diamondRequest = new DiamondRequest("saveDiamond", diamondIds);
+        	serverResult = AbstractAPIAdapter.getInstance().saveDiamond(diamondRequest);
+        	//serverResult = "[[\"value1\",\"value2\"],[\"06012c65c2ce2237d4ab00570b337b453af45bbf490ed908fc64cded99331ef3\",\"cc903acb3dcb96b067b1a482cb60df65c3767eace43f15b6348fae909fa990bd\"]]";
+        	respData.setStatus("success");
+        	respData.setResult(serverResult);
     		clientResponse.setResultType("DiamondResponse");
-    		logger.info("Diamond response from server = " + gson.toJson(diamondResponse));
-    		System.out.println("Diamond response from server = " + gson.toJson(diamondResponse));
-    		clientResponse.setResult(gson.toJson(diamondResponse));
+    		clientResponse.setResponseData(respData);
+    		System.out.println("Diamond response from server = " + gson.toJson(clientResponse));
     	}    	 	
-    	break;    	
+    	break;   	
     default:
-    	logger.info("Processing default. Not expected behavior. Please check for command sent to server.");
-    	clientResponse.setStatus(apiCommand + " failed. Command not specified or not implemented.");
+    	System.out.println("Processing default. Not expected behavior. Please check for command sent to server.");
+    	//clientResponse.setStatus(apiCommand + " failed. Command not specified or not implemented.");
+    	respData.setStatus("failure");
+    	respData.setResult(null);
+		clientResponse.setResultType(apiCommand + " failed. Command not specified or not implemented.");
+		clientResponse.setResponseData(null);
     	break;
     }
     
     String response = gson.toJson(clientResponse);
-    logger.info("handle message reponse = " + response);
+    logger.info("handle message reponse at server = " + response);
     return response;
-    
-    /*BlockResponse blockResponse = new BlockResponse();
-    BlockRequest blockRequest = gson.fromJson(frameText, BlockRequest.class);
-    final String command = blockRequest.getCommand();
-    logger.info("command " + command);
-    System.out.println(StringUtils.log(logger) + "command " + command);
-
-    if (command != null) {
-      if ("getnewblock".equals(command)) {
-        logger.info("Getting blocks from ai block chain starting from number " + blockRequest.getBlockNumber()
-                + " to " + blockRequest.getNumberOfBlocks());
-        HanaItems hanaItems = AbstractAPIAdapter.getInstance().getBlocksStartingWith(
-                blockRequest.getBlockNumber(),
-                blockRequest.getNumberOfBlocks());
-        if (hanaItems == null) {
-          blockResponse.setResult("failure-getnewblock request failed");
-        } else {
-          blockResponse.setResult(gson.toJson(hanaItems));
-        }
-      } else if ("getnewtestblock".equals(command)) { 
-    	  logger.info("getNewTestBlock");
-    	  HanaBlockItem blockItem = HanaItems.makeTestHanaBlockItem(); 
-    	  logger.info("Test Block Item = " + gson.toJson(blockItem));
-    	  blockResponse.setResult(gson.toJson(blockItem));
-      } else {
-        blockResponse.setResult("Failed. Command: " + command + " not recognized.");
-      }
-    } else {
-      blockResponse.setResult("Failed. Command not specified.");
-    }
-    String response = gson.toJson(blockResponse);
-    return response;*/
   }
 }

@@ -4,57 +4,41 @@
 package com.aiblockchain.server.websocket.fault;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
 /**
  * @author Athi
  *
  */
-public class FaultResponse implements Serializable {
-	   private String result;
-	   private Map<String, Serializable> faultData;
+public class FaultResponse implements Serializable
+{
+	private static final long serialVersionUID = 2878120152313658729L;
+	private String resultType;
+    private ResponseData responseData;
 
-	   public String getResult() {
-	      return result;
-	   }
+    public ResponseData getResponseData ()
+    {
+        return responseData;
+    }
 
-	   public Map<String, Serializable> getFaultData() {
-	      return faultData;
-	   }
+    public void setResponseData (ResponseData responseData)
+    {
+        this.responseData = responseData;
+    }
 
-	   public void setResult(String command) {
-	      this.result = command;
-	   }
+    public String getResultType ()
+    {
+        return resultType;
+    }
 
-	   public void setFaultData(Map<String, Serializable> faultData) {
-	      this.faultData = faultData;
-	   }
+    public void setResultType (String resultType)
+    {
+        this.resultType = resultType;
+    }
 
-	   @Override
-	   public boolean equals(Object o) {
-	      if (this == o) { return true; }
-	      if (o == null || getClass() != o.getClass()) { return false; }
-
-	      FaultResponse that = (FaultResponse) o;
-
-	      if (result != null ? !result.equals(that.result) : that.result != null) { return false; }
-	      if (faultData != null ? !faultData.equals(that.faultData) : that.faultData != null) { return false; }
-
-	      return true;
-	   }
-
-	   @Override
-	   public int hashCode() {
-	      int result = this.result != null ? this.result.hashCode() : 0;
-	      result = 31 * result + (faultData != null ? faultData.hashCode() : 0);
-	      return result;
-	   }
-
-	   @Override
-	   public String toString() {
-	      return "FaultResponse{"  +
-	              "result='"      + result + '\'' +
-	            ", faultData='" + faultData + '\'' +
-	            '}';
-	   }
+    @Override
+    public String toString()
+    {
+        return "FaultResponse [responseData = "+responseData+", resultType = "+resultType+"]";
+    }
 }

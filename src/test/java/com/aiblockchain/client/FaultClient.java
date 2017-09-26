@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.aiblockchain.server.websocket.fault.FaultResponse;
+import com.aiblockchain.server.websocket.fault.FaultData;
 import com.google.gson.Gson;
 
 /**
@@ -53,7 +53,7 @@ public class FaultClient {
 			clientEndPoint.addMessageHandler(new WebsocketClientEndpoint.MessageHandler() {
 				public void handleMessage(String message) {										
 					LOGGER.debug("Received Message from server: " + message);
-					FaultResponse faultResponse = gson.fromJson(message, FaultResponse.class);
+					FaultData faultResponse = gson.fromJson(message, FaultData.class);
 					LOGGER.debug("Fault Response: " + faultResponse);
 					synchronized (lock) {
 						lock.notify();// Will wake up lock.wait()

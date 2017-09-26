@@ -1,23 +1,24 @@
 package com.aiblockchain.client;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import com.aiblockchain.listener.AIBlockChainListener;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.model.hana.HanaItems.HanaBlockItem;
 import com.aiblockchain.server.websocket.fault.DiamondRequest;
-import com.aiblockchain.server.websocket.fault.DiamondResponse;
 import com.aiblockchain.server.websocket.fault.FaultRequest;
-import com.aiblockchain.server.websocket.fault.FaultResponse;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.log4j.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * @author reed
@@ -108,12 +109,12 @@ public class AIBlockChainListenerTest {
     }
 
     @Override
-    public FaultResponse updateFault(FaultRequest faultRequest) {
+    public String updateFault(FaultRequest faultRequest) {
       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 	@Override
-	public DiamondResponse saveDiamond(DiamondRequest diamondRequest) {
+	public String saveDiamond(DiamondRequest diamondRequest) {
 	      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 

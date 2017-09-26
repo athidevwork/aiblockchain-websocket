@@ -1,14 +1,14 @@
 package com.aiblockchain.client;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
 import com.aiblockchain.listener.HanaListener;
 import com.aiblockchain.model.hana.HanaItems;
 import com.aiblockchain.server.websocket.fault.DiamondRequest;
-import com.aiblockchain.server.websocket.fault.DiamondResponse;
 import com.aiblockchain.server.websocket.fault.FaultRequest;
-import com.aiblockchain.server.websocket.fault.FaultResponse;
-import java.util.HashSet;
-import java.util.Set;
-import org.apache.log4j.Logger;
 
 /**
  * APIAdapter.java
@@ -46,7 +46,7 @@ public abstract class AbstractAPIAdapter {
    * @param faultRequest the fault request, which contains the fault signatures
    * @return
    */
-  public abstract FaultResponse updateFault(final FaultRequest faultRequest);
+  public abstract String updateFault(final FaultRequest faultRequest);
   
   /** Adds a HANA 2 demonstration listener.
    * 
@@ -86,5 +86,5 @@ public abstract class AbstractAPIAdapter {
    */
   abstract protected Logger getLogger();
 
-  public abstract DiamondResponse saveDiamond(DiamondRequest diamondRequest);
+  public abstract String saveDiamond(DiamondRequest diamondRequest);
 }
